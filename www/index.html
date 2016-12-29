@@ -11,71 +11,291 @@
   <link rel="stylesheet" href="lib/onsenui/css/onsenui.css">
   <link rel="stylesheet" href="lib/onsenui/css/onsen-css-components.css">
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animate.css">
 
   <script>
+  
+    window.fn = {};
+    
+    window.fn.openMenuMain = function() {
+      var menu = document.getElementById('menuMain');
+      menu.open();
+    };
+    
+    window.fn.load = function(page, options) {
+      var menu = document.getElementById('menuMain');
+      var navi = document.getElementById('navigator');
+    
+      menu.close();
+      /*navi.resetToPage(page, { animation: 'fade' });*/
+      navi.pushPage(page, options);
+    };  
+  
     document.addEventListener("deviceready", onDeviceReady, false);
     function onDeviceReady() {
         /*if (cordova.platformId == 'android') {
             StatusBar.backgroundColorByHexString("#DD1111");
         }*/
     }
+
+    // Page show event
+    document.addEventListener('show', function(event) {
+      var page = event.target;
+        
+        //alert("show\r\n"+page); 
+
+    });
+
+    // Navigator prepush event
+    document.addEventListener('prepush', function(event) {
+      var page = event.target;
+        
+        //alert("prepush\r\n"+page); 
+
+    });
+
     // Page init event
     document.addEventListener('init', function(event) {
       var page = event.target;
 
       if (page.matches('#tab1')) {
-
         page.querySelector('#push-button').onclick = function() {
           document.querySelector('#navigator').pushPage('page2.html');
         };
         
       } else if (page.matches('#second-page')) {
-
         page.querySelector('#pop-button').onclick = function() {
           document.querySelector('#navigator').popPage();
         };
 
+      } else if (page.matches('#Search')) {
+        //if ( page.data.activeTab != undefined )
+        //{
+            //document.getElementById('SearchTabbar').setActiveTab(page.data.activeTab);
+            var index = page.data.activeTab ? page.data.activeTab : 0;
+            document.getElementById('SearchTabbar').setActiveTab(index);
+        //}
+
       }
     });
+    
+    ons.createPopover('menuMore.html');
+    
+    function scanBarcode( )
+    {
+        window.plugins.barcodeScanner.scan(
+            function(result)
+            {
+                alert("We got a barcode!\n" +
+                          "Result: " + result.text + "\n" +
+                          "Format: " + result.format + "\n" +
+                          "Cancelled: " + result.cancelled);
+                          
+                if ( result.cancelled )
+                    return;
+                
+                var message;
+                var error = false; 
+                
+                if ( result.format != 'QR_CODE' )
+                {
+                    message = "Only the QR-Code is applicable.\r\nPlease use the correct QR-Code.";
+                    error = true;
+                }
+                else if ( result.text.indexOf("http://www.bidsfight.com/auction?id=") != 0 )
+                {
+                    message = "QR-Code URL should be in form:\r\n\"http://www.bidsfight.com/auction?id=ХХХХХ\"\r\n where XXXXX should be auction ID number.\r\nPlease use proper QR-Code.";
+                    error = true;
+                }
+                
+                if ( error )
+                {
+                    ons
+                        .notification.confirm(message+"\r\n"+"Scan again?", {buttonLabels:["Cancel", "Scan"], primaryButtonIndex:1, title:"Scan error", cancelable:true})
+                        .then(function(button)
+                        {
+                            if ( button == 1 )
+                            {
+                                //alert("Rescan!");
+                                scanBarcode();
+                            }
+                        });
+                    return;
+                }
+                
+                navigator.vibrate(500);
+                alert("We got a barcode!\n" +
+                          "Result: " + result.text + "\n" +
+                          "Format: " + result.format + "\n" +
+                          "Cancelled: " + result.cancelled);
+                          
+                
+            },
+            function(error) {
+                alert("Scanning failed: " + error);
+            },
+            {//параметры почему-то не работают с плагином Monaca. Чтобы попробовать импортировать родной Cordova Barcode scanner - нужен платный тарив в Monaca
+                preferFrontCamera : true, // iOS and Android
+                showFlipCameraButton : true, // iOS and Android
+                showTorchButton : true, // iOS and Android
+                torchOn: true, // Android, launch with the torch switched on (if available)
+                prompt : "Place a barcode inside the scan area", // Android
+                resultDisplayDuration: 0, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
+                formats : "QR_CODE", // default: all but PDF_417 and RSS_EXPANDED
+                orientation : "portrait", // Android only (portrait|landscape), default unset so it rotates with the device
+                disableAnimations : true // iOS
+            }            
+        );
+
+    }
+    
   </script>
 </head>
 <body>
-  <ons-navigator id="navigator" page="page1.html" animation="slide"></ons-navigator>
 
-  <ons-template id="page1.html">
-    <ons-page id="first-page">
-      <ons-toolbar>
-        <div class="center">Page 1</div>
-      </ons-toolbar>
-      
-<ons-tabbar position="top" animation="slide">
-  <ons-tab label="Tab 1" page="tab1.html" active>
-  </ons-tab>
-  <ons-tab label="Tab 2" page="tab2.html">
-  </ons-tab>
-</ons-tabbar>
-
-
-   <!--   <div class="content" style="text-align: center">
-        <p>This is the first page.</p>
-        <ons-button id="push-button">Push page</ons-button>
-      </div> -->
+<ons-splitter>
+  <ons-splitter-side id="menuMain" side="left" width="250px" swipe-target-width="100px" collapse swipeable>
+    <ons-page>
+      <ons-list>
+        <ons-list-header>Win auction</ons-list-header>
+        <ons-list-item tappable onclick="fn.load('Search.html')">
+          <div class="left">
+            <ons-icon icon="fa-search" class="list__item__icon" fixed-width="true"></ons-icon>
+          </div>
+          <div class="center">
+            Find auction
+          </div>
+        </ons-list-item>
+        <ons-list-item tappable onclick="fn.load('Search.html',{data:{activeTab:2}})">
+          <div class="left">
+            <ons-icon icon="fa-list-ol" class="list__item__icon" fixed-width="true"></ons-icon>
+          </div>
+          <div class="center">
+            Search results
+          </div>
+        </ons-list-item>
+        <ons-list-item tappable>
+          <div class="left">
+            <ons-icon icon="fa-history" class="list__item__icon" fixed-width="true"></ons-icon>
+          </div>
+          <div class="center">
+            History
+          </div>
+        </ons-list-item>
+        <ons-list-header>Earn money</ons-list-header>
+        <ons-list-item tappable>
+          <div class="left">
+            <ons-icon icon="fa-plus" class="list__item__icon" fixed-width="true"></ons-icon>
+          </div>
+          <div class="center">
+            Create auction
+          </div>
+        </ons-list-item>
+        <ons-list-item tappable>
+          <div class="left">
+            <ons-icon icon="fa-users" class="list__item__icon" fixed-width="true"></ons-icon>
+          </div>
+          <div class="center">
+            Referral programm
+          </div>
+        </ons-list-item>
+        <ons-list-header>More</ons-list-header>
+        <ons-list-item tappable>
+          <div class="left">
+            <ons-icon icon="fa-bell" class="list__item__icon" fixed-width="true"></ons-icon>
+          </div>
+          <div class="center">
+            Notifications
+          </div>
+          <div class="right">
+            <span class="notification">12</span>
+          </div>
+        </ons-list-item>
+        <ons-list-item tappable>
+          <div class="left">
+            <ons-icon icon="fa-cog" class="list__item__icon" fixed-width="true"></ons-icon>
+          </div>
+          <div class="center">
+            Settings
+          </div>
+        </ons-list-item>
+        <ons-list-item tappable>
+          <div class="left">
+            <ons-icon icon="fa-question" class="list__item__icon" fixed-width="true"></ons-icon>
+          </div>
+          <div class="center">
+            Help
+          </div>
+        </ons-list-item>
+        <ons-list-item tappable>
+          <div class="left">
+            <ons-icon icon="fa-info" class="list__item__icon" fixed-width="true"></ons-icon>
+          </div>
+          <div class="center">
+            About
+          </div>
+        </ons-list-item>
+        
+        <!--<ons-list-item onclick="document.querySelector('#menuMain').close(); document.querySelector('#navigator').resetToPage('home.html')" tappable>
+          Home
+        </ons-list-item>
+        <ons-list-item onclick="fn.load('page2.html')" tappable>
+          Settings
+        </ons-list-item>
+        <ons-list-item onclick="fn.load('about.html')" tappable>
+          About
+        </ons-list-item>-->
+        
+      </ons-list>
     </ons-page>
-  </ons-template>
+  </ons-splitter-side>
+  <ons-splitter-content>
+    <ons-navigator id="navigator" page="Home.html" animation="slide"></ons-navigator>
+  </ons-splitter-content>
+</ons-splitter>
 
-  <ons-template id="page2.html">
-    <ons-page id="second-page">
-      <ons-toolbar>
-        <div class="left"><ons-back-button>Page 1</ons-back-button></div>
-        <div class="center">Page 2</div>
-      </ons-toolbar>
 
+  <!--<ons-navigator id="navigator" page="home.html" animation="slide"></ons-navigator>-->
+
+<ons-template id="Home.html">
+    <ons-page>
+        <ons-toolbar>
+            <div class="left">
+                <ons-toolbar-button onclick="fn.openMenuMain()"><ons-icon icon="fa-bars"></ons-icon></ons-toolbar-button>
+            </div>
+            <div class="center">
+                Auctions
+            </div>
+            <div class="right">
+                <ons-toolbar-button onclick="document.getElementById('navigator').pushPage('Search.html')"><ons-icon icon="fa-search"></ons-icon></ons-toolbar-button>
+                <ons-toolbar-button><ons-icon icon="fa-plus"></ons-icon></ons-toolbar-button>
+                <ons-toolbar-button><div class="notification events-notification ">12</div><ons-icon icon="fa-bell"></ons-icon></ons-toolbar-button>
+                <ons-toolbar-button onclick="document.getElementById('menuMore').show(this)"><ons-icon icon="fa-ellipsis-v"></ons-icon></ons-toolbar-button>
+            </div>
+        </ons-toolbar>
+        <ons-tabbar position="top" animation="slide">
+            <ons-tab icon="fa-gavel" label="Bids" page="HomeBids.html" active></ons-tab>
+            <ons-tab icon="fa-eye" label="Watch" page="tab1.html"></ons-tab>
+            <ons-tab icon="fa-money" label="Earn" page="tab2.html"></ons-tab>
+        </ons-tabbar>
+    </ons-page>
+</ons-template>
+
+<ons-template id="HomeBids.html">
+  <ons-page id="HomeBids">
       <div class="content" style="text-align: center">
-        <p>This is the second page.</p>
-        <ons-button id="pop-button">Pop page</ons-button>
+        <ons-if orientation="portrait"><p>&nbsp</p></ons-if>
+        <p>Currently you don't participate in no one auctions.</p>
+        <p>Please don't lost your time!<ons-if orientation="portrait"><br /></ons-if>&nbspFind and win auction right now.</p>
+        <p>Be the first. Get more!</p>
+        <ons-if orientation="portrait"><p>&nbsp</p></ons-if>
+        <ons-button id="push-button" class="buttonCTA animated pulse animatedBtn" onclick="document.getElementById('navigator').pushPage('Search.html')">
+            <!--<ons-icon icon="fa-search"></ons-icon>-->
+            Find and win!
+        </ons-button>
       </div>
-    </ons-page>
-  </ons-template>
+  </ons-page>
+</ons-template>
   
 <ons-template id="tab1.html">
   <ons-page id="tab1">
@@ -105,6 +325,95 @@
       This is the Tab 2 on first page.
     </p>
   </ons-page>
+</ons-template>  
+
+  <ons-template id="page2.html">
+    <ons-page id="second-page">
+      <ons-toolbar>
+        <div class="left"><ons-back-button>Page 1</ons-back-button></div>
+        <div class="center">Page 2</div>
+      </ons-toolbar>
+
+      <div class="content" style="text-align: center">
+        <p>This is the second page.</p>
+        <ons-button id="pop-button">Pop page</ons-button>
+      </div>
+    </ons-page>
+  </ons-template>
+
+<ons-template id="Search.html">
+    <ons-page id="Search">
+        <ons-toolbar>
+            <div class="left"><ons-back-button>Back</ons-back-button></div>
+            <div class="center">
+                Search
+            </div>
+            <div class="right">
+                <ons-toolbar-button onclick="document.getElementById('navigator').resetToPage('Home.html')"><ons-icon icon="fa-home"></ons-icon></ons-toolbar-button>
+                <ons-toolbar-button><div class="notification events-notification">4</div><ons-icon icon="fa-bell"></ons-icon></ons-toolbar-button>
+                <ons-toolbar-button onclick="document.getElementById('menuMore').show(this)"><ons-icon icon="fa-ellipsis-v"></ons-icon></ons-toolbar-button>
+            </div>
+        </ons-toolbar>
+        <ons-tabbar position="top" animation="slide" id="SearchTabbar">
+            <ons-tab icon="fa-crosshairs" label="Quick" page="SearchSimple.html"></ons-tab>
+            <ons-tab icon="fa-sliders" label="Advanced" page="tab1.html"></ons-tab>
+            <ons-tab icon="fa-list-ol" label="Results" page="tab2.html"></ons-tab>
+        </ons-tabbar>
+    </ons-page>
+</ons-template>
+
+<ons-template id="SearchSimple.html">
+  <ons-page id="SearchSimple">
+      <div class="content" style="text-align: center">
+        <p>Please type auction's ID, part of title or description and press 'Find!':</p>
+        <p><input type="search" class="search-input" style="width: 75%; margin: 6px auto 6px auto;" placeholder="Search" autofocus="true"></input></p>
+        <!--<p><ons-input type="search"  style="width: 75%; margin: 6px auto 6px auto;" placeholder="Search" autofocus="true"></ons-input></p>-->
+        <ons-button id="push-button" onclick="">
+            <ons-icon icon="fa-search"></ons-icon>
+            Find!
+        </ons-button>
+        <p>- OR -</p>
+        <p>Scan QR-code with auction info:</p>
+        <ons-button id="push-button" onclick="scanBarcode()">
+            <ons-icon icon="fa-qrcode"></ons-icon>
+            Scan!
+        </ons-button>
+      </div>
+  </ons-page>
+</ons-template>
+
+<ons-template id="menuMore.html">
+<ons-popover direction="down" cancelable cover-target id="menuMore">
+    <ons-list>
+        <ons-list-item tappable>
+          <div class="left">
+            <ons-icon icon="fa-search" class="list__item__icon" fixed-width="true"></ons-icon>
+          </div>
+          <div class="center">
+            Find and win
+          </div>
+        </ons-list-item>
+        <ons-list-item tappable>
+          <div class="left">
+            <ons-icon icon="fa-plus" class="list__item__icon" fixed-width="true"></ons-icon>
+          </div>
+          <div class="center">
+            Create and earn
+          </div>
+        </ons-list-item>
+        <ons-list-item tappable>
+          <div class="left">
+            <ons-icon icon="fa-question" class="list__item__icon" fixed-width="true"></ons-icon>
+          </div>
+          <div class="center">
+            Help
+          </div>
+        </ons-list-item>
+    </ons-list>
+    <div style="padding: 10px; text-align: center;">
+            <ons-button modifier="outline" onclick="document.getElementById('menuMore').hide()">Cancel</ons-button>
+    </div>
+</ons-popover>
 </ons-template>  
   
 </body>

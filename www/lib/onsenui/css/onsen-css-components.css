@@ -785,7 +785,7 @@ ons-range[disabled] .range {
   line-height: 44px;
 }
 .navigation-bar__center {
-  width: 46%;
+  width: 30%;
   text-align: center;
   line-height: 44px;
   font-size: 17px;
@@ -1377,7 +1377,7 @@ ons-range[disabled] .range {
   letter-spacing: 0;
   color: #fff;
   vertical-align: middle;
-  background-color: #d11;
+  background-color: #fa0;
   border: 0px solid currentColor;
   -webkit-border-radius: 3px;
   border-radius: 3px;
@@ -1386,7 +1386,7 @@ ons-range[disabled] .range {
   -o-transition: none;
   transition: none;
   border: none;
-  background-color: #f31b1b;
+  background-color: #fa0;
   color: #fff;
 }
 .button--cta:hover {

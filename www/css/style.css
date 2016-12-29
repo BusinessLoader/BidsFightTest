@@ -1,2 +1,44 @@
 /**/
 
+.events-notification {
+    /*background-color: #fff;
+    color: #000;*/
+    position: absolute;
+    top: 28px;
+    /*font-size: 10px;*/
+    font-weight: 600;
+    height: 13px;
+    line-height: 13px;
+    padding: 0 4px;
+    min-width: 13px;
+    margin-left: 8px;
+}
+
+.animatedBtn {
+    -webkit-animation-duration: 1s;
+    -o-animation-duration: 1s;
+    -moz-animation-duration: 1s;
+    animation-duration: 1s;
+    
+    -webkit-animation-delay: 0s;
+    -o-animation-delay: 0s;
+    -moz-animation-delay: 0s;
+    animation-delay: 0s;
+    
+    -webkit-animation-iteration-count: infinite;
+    -o-animation-iteration-count: infinite;
+    -moz-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+ } 
+ 
+.buttonCTA {
+    background-color: #fa0; 
+    color: #000;
+    font-weight: 600;
+ }
+ 
+.buttonCTA:active {
+    background-color: #f50;
+    color: #000;
+    font-weight: 600;
+ }
