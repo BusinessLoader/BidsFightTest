@@ -1,3 +1,4 @@
+/*BidsFight theme*/
 html {
   height: 100%;
   width: 100%;
@@ -780,7 +781,7 @@ ons-range[disabled] .range {
 }
 .navigation-bar__right {
   max-width: 50%;
-  width: 27%;
+  width: 43%;
   text-align: right;
   line-height: 44px;
 }

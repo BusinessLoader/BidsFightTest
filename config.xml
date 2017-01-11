@@ -86,21 +86,26 @@
   </platform>
   <preference name="WindowsStorePublisherName" value="My Name"/>
   <preference name="WindowsStoreIdentityName" value="0276ddd6-3e62-b3f5-2b70-1690542e6580"/>
-  <preference name="webView" value="org.crosswalk.engine.XWalkWebViewEngine"/>
   <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>
   </feature>
   <preference name="StatusBarBackgroundColor" value="#aa1111"/>
-  <preference name="KeepRunning" value="true"/>
-  <preference name="monaca:AndroidIsPackageNameSeparate" value="false"/>
-  <preference name="Orientation" value="default"/>
-  <preference name="SplashScreenDelay" value="3000"/>
-  <preference name="Fullscreen" value="false"/>
   <preference name="ios-XCBuildConfiguration-TARGETED_DEVICE_FAMILY" value="1,2"/>
   <preference name="AutoHideSplashScreen" value="true"/>
   <preference name="FadeSplashScreen" value="true"/>
   <preference name="ShowSplashScreenSpinner" value="true"/>
-  <access origin="*"/>
-  <preference name="DisallowOverscroll" value="true"/>
   <preference name="EnableViewportScale" value="false"/>
+  <!--<access origin="*"/>-->
+  <access origin="tel:*"/>
+  <access origin="geo:*"/>
+  <access origin="map:*"/>
+  <access origin="mailto:*"/>
+  <access origin="sms:*"/>
+  <access origin="market:*"/>
+  <preference name="KeepRunning" value="true"/>
+  <preference name="monaca:AndroidIsPackageNameSeparate" value="false"/>
+  <preference name="DisallowOverscroll" value="true"/>
+  <preference name="Orientation" value="default"/>
+  <preference name="SplashScreenDelay" value="3000"/>
+  <preference name="Fullscreen" value="false"/>
 </widget>

@@ -15,6 +15,28 @@
 
   <script>
   
+    ons.ready(onOnsReady);
+    function onOnsReady()
+    {
+        //alert('onOnsReady');
+        
+        if ( ons.isWebView() )
+        {
+            ons.setDefaultDeviceBackButtonListener(function()
+                {
+                    ons.notification.confirm('Do you want to close the app?', {cancelable:true, title:"Exit"}) // Ask for confirmation
+                    .then(function(index)
+                    {
+                        if (index === 1) // OK button
+                        {
+                            navigator.app.exitApp(); // Close the app
+                        }
+                    });
+            });
+        }
+        
+    }
+    
     window.fn = {};
     
     window.fn.openMenuMain = function() {
@@ -32,12 +54,20 @@
     };  
   
     document.addEventListener("deviceready", onDeviceReady, false);
-    function onDeviceReady() {
-        /*if (cordova.platformId == 'android') {
-            StatusBar.backgroundColorByHexString("#DD1111");
-        }*/
+    function onDeviceReady()
+    {
+        //alert('deviceready');
     }
 
+    function showAuctionInfo()
+    {
+        if ( !event.target.matches('.ons-icon') && !(event.target.tagName == "A") )
+        {
+            //alert("Auction info");
+            fn.load('Auction.html');
+        }
+    }
+    
     // Page show event
     document.addEventListener('show', function(event) {
       var page = event.target;
@@ -79,17 +109,30 @@
       }
     });
     
-    ons.createPopover('menuMore.html');
+    /*ons.createPopover('menuMore.html');
+    ons.createPopover('popupFilterHistory.html');
+    ons.createPopover('menuAuction.html');*/
+    
+    function showMenuAuction(target)
+    {
+        ons.createPopover('menuAuction.html').then(function(popover){popover.show(target);})
+    }
+    
+    function showMenuMore(target)
+    {
+        ons.createPopover('menuMore.html').then(function(popover){popover.show(target);})
+    }
     
     function scanBarcode( )
     {
-        window.plugins.barcodeScanner.scan(
+        //window.plugins.barcodeScanner.scan(
+        cordova.plugins.barcodeScanner.scan(
             function(result)
             {
-                alert("We got a barcode!\n" +
+                /*alert("We got a barcode!\n" +
                           "Result: " + result.text + "\n" +
                           "Format: " + result.format + "\n" +
-                          "Cancelled: " + result.cancelled);
+                          "Cancelled: " + result.cancelled);*/
                           
                 if ( result.cancelled )
                     return;
@@ -99,19 +142,23 @@
                 
                 if ( result.format != 'QR_CODE' )
                 {
-                    message = "Only the QR-Code is applicable.\r\nPlease use the correct QR-Code.";
+                    //message = "Only the QR-Code is applicable.\r\nPlease use the correct QR-Code.";
+                    message = "Only the QR-Code is applicable.<br/>Please use the correct QR-Code.";
                     error = true;
                 }
                 else if ( result.text.indexOf("http://www.bidsfight.com/auction?id=") != 0 )
                 {
-                    message = "QR-Code URL should be in form:\r\n\"http://www.bidsfight.com/auction?id=ХХХХХ\"\r\n where XXXXX should be auction ID number.\r\nPlease use proper QR-Code.";
+                    //message = "QR-Code URL should be in form:\r\n\"http://www.bidsfight.com/auction?id=ХХХХХ\"\r\n where XXXXX should be auction ID number.\r\nPlease use proper QR-Code.";
+                    message = 'QR-Code URL should be in form:<br><textarea style="width:90%">http://www.bidsfight.com/auction?id=ХХХХХ</textarea><br/>where XXXXX should be auction ID number.<br/>Please use proper QR-Code.';
                     error = true;
                 }
                 
                 if ( error )
                 {
+                    var messageAsk = message + "<p>Scan again?</p>";
                     ons
-                        .notification.confirm(message+"\r\n"+"Scan again?", {buttonLabels:["Cancel", "Scan"], primaryButtonIndex:1, title:"Scan error", cancelable:true})
+                        //.notification.confirm(message+"\r\n"+"Scan again?", {buttonLabels:["Cancel", "Scan"], primaryButtonIndex:1, title:"Scan error", cancelable:true})
+                        .notification.confirm({messageHTML:messageAsk, buttonLabels:["Cancel", "Scan"], primaryButtonIndex:1, title:"Scan error", cancelable:true})
                         .then(function(button)
                         {
                             if ( button == 1 )
@@ -123,31 +170,65 @@
                     return;
                 }
                 
-                navigator.vibrate(500);
-                alert("We got a barcode!\n" +
+                navigator.notification.beep(1);
+                navigator.vibrate(1000);
+                fn.load('Auction.html');
+                /*alert("We got a barcode!\n" +
                           "Result: " + result.text + "\n" +
                           "Format: " + result.format + "\n" +
-                          "Cancelled: " + result.cancelled);
+                          "Cancelled: " + result.cancelled);*/
                           
                 
             },
             function(error) {
                 alert("Scanning failed: " + error);
             },
-            {//параметры почему-то не работают с плагином Monaca. Чтобы попробовать импортировать родной Cordova Barcode scanner - нужен платный тарив в Monaca
-                preferFrontCamera : true, // iOS and Android
+            {//параметры не работают с плагином cordova-plugin-barcodescanner (он же стандартный плагин Monaca). Параметры есть в phonegap-plugin-barcodescanner (Чтобы его импортировать в проект - нужен платный тарив в Monaca)
+                preferFrontCamera : false, // iOS and Android
                 showFlipCameraButton : true, // iOS and Android
                 showTorchButton : true, // iOS and Android
-                torchOn: true, // Android, launch with the torch switched on (if available)
+                torchOn: false, // Android, launch with the torch switched on (if available)
                 prompt : "Place a barcode inside the scan area", // Android
                 resultDisplayDuration: 0, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
                 formats : "QR_CODE", // default: all but PDF_417 and RSS_EXPANDED
-                orientation : "portrait", // Android only (portrait|landscape), default unset so it rotates with the device
+                //orientation : "portrait", // Android only (portrait|landscape), default unset so it rotates with the device
                 disableAnimations : true // iOS
             }            
         );
 
     }
+    
+    var showDialog = function(id) {
+      document
+        .getElementById(id)
+        .show();
+    };
+    
+    var hideDialog = function(id) {
+      document
+        .getElementById(id)
+        .hide();
+    };
+
+    function ClearHistory()
+    {
+        showDialog('dialogConfirmClearHistory')
+        /*ons
+            .notification.confirm(, {title:"Clear history", cancelable:true})
+            .then(function(button)
+            {
+                if ( button == 1 )
+                {
+                    //alert("clear");
+                }
+            });*/
+    }
+
+    function FilterHistory()
+    {
+        showDialog('dialogFilterHistory')
+    }
+
     
   </script>
 </head>
@@ -174,7 +255,7 @@
             Search results
           </div>
         </ons-list-item>
-        <ons-list-item tappable>
+        <ons-list-item tappable onclick="fn.load('History.html')">
           <div class="left">
             <ons-icon icon="fa-history" class="list__item__icon" fixed-width="true"></ons-icon>
           </div>
@@ -270,13 +351,12 @@
                 <ons-toolbar-button onclick="document.getElementById('navigator').pushPage('Search.html')"><ons-icon icon="fa-search"></ons-icon></ons-toolbar-button>
                 <ons-toolbar-button><ons-icon icon="fa-plus"></ons-icon></ons-toolbar-button>
                 <ons-toolbar-button><div class="notification events-notification ">12</div><ons-icon icon="fa-bell"></ons-icon></ons-toolbar-button>
-                <ons-toolbar-button onclick="document.getElementById('menuMore').show(this)"><ons-icon icon="fa-ellipsis-v"></ons-icon></ons-toolbar-button>
             </div>
         </ons-toolbar>
         <ons-tabbar position="top" animation="slide">
             <ons-tab icon="fa-gavel" label="Bids" page="HomeBids.html" active></ons-tab>
-            <ons-tab icon="fa-eye" label="Watch" page="tab1.html"></ons-tab>
-            <ons-tab icon="fa-money" label="Earn" page="tab2.html"></ons-tab>
+            <ons-tab icon="fa-eye" label="Watch" page="HomeWatch.html"></ons-tab>
+            <ons-tab icon="fa-money" label="Earn" page="HomeEarn.html"></ons-tab>
         </ons-tabbar>
     </ons-page>
 </ons-template>
@@ -284,11 +364,11 @@
 <ons-template id="HomeBids.html">
   <ons-page id="HomeBids">
       <div class="content" style="text-align: center">
-        <ons-if orientation="portrait"><p>&nbsp</p></ons-if>
+        <ons-if orientation="portrait"><p>&nbspVERTICAL ORIENTATION</p></ons-if>
         <p>Currently you don't participate in no one auctions.</p>
-        <p>Please don't lost your time!<ons-if orientation="portrait"><br /></ons-if>&nbspFind and win auction right now.</p>
+        <p>Please don't lost your time!<ons-if orientation="portrait">BREAK<br /></ons-if>&nbspFind and win auction right now.</p>
         <p>Be the first. Get more!</p>
-        <ons-if orientation="portrait"><p>&nbsp</p></ons-if>
+        <ons-if orientation="portrait"><p>&nbspVERTICAL ORIENTATION</p></ons-if>
         <ons-button id="push-button" class="buttonCTA animated pulse animatedBtn" onclick="document.getElementById('navigator').pushPage('Search.html')">
             <!--<ons-icon icon="fa-search"></ons-icon>-->
             Find and win!
@@ -296,7 +376,333 @@
       </div>
   </ons-page>
 </ons-template>
-  
+
+<ons-template id="HomeWatch.html">
+    <ons-page id="HomeWatch">
+        <div class="content" style="text-align: center">
+        <p>List of your watched auctions:</p>
+              <hr />
+        <ons-list modifier="noborder">
+            
+            <ons-list-item  tappable modifier="nodivider" class="list-item-container" onclick="showAuctionInfo()">
+              <ons-row>
+                <ons-col width="95px">
+                  <img src="images/location1.png" class="thumbnail">
+                </ons-col>
+                <ons-col >
+                  <div class="auction-title">
+                    Eiffel Tower
+                  </div>
+                  <p></p>
+                  <div  class="name">
+                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                  </div>
+                  <div class="name">
+                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                  </div>
+                </ons-col>
+                <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
+              </ons-row>
+              <ons-row>
+                  <div class="desc">
+                    <p>Eiffel Tower is the symbol of Paris and named by Gustave Eiffel.</p>
+                  </div>
+              </ons-row>
+              <ons-row style="text-align:center">
+                  <ons-col width="50%">
+                  <div class="location">
+                    <a href="#" onclick="window.open('https://www.google.ru/maps/@48.8582889,2.2927593,17z', '_system')"><i class="fa fa-map-marker"></i> Paris, France</a>
+                  </div>
+                  </ons-col>
+                  <ons-col width="50%">
+                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  </ons-col>
+              </ons-row>
+            </ons-list-item>
+              <hr />
+
+            <ons-list-item   tappable modifier="nodivider" class="list-item-container"  onclick="showAuctionInfo()">
+              <ons-row>
+                <ons-col width="95px">
+                  <img src="images/location2.png" class="thumbnail">
+                </ons-col>
+                <ons-col >
+                  <div class="auction-title">
+                    Monument Valley
+                  </div>
+                  <p></p>
+                  <div  class="name">
+                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                  </div>
+                  <div class="name">
+                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                  </div>
+                </ons-col>
+                <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
+              </ons-row>
+              <ons-row>
+                  <div class="desc">
+                    <p>Director John Ford used Monument Valley for a number of his best-known films.</p>
+                  </div>
+              </ons-row>
+              <ons-row style="text-align:center">
+                  <ons-col width="50%">
+                  <div class="location">
+                    <a href="#" onclick="window.open('https://www.google.ru/maps/@37.0533978,-110.3478826,11.01z', '_system')"><i class="fa fa-map-marker"></i> Utah, USA</a>
+                  </div>
+                  </ons-col>
+                  <ons-col width="50%">
+                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  </ons-col>
+              </ons-row>
+            </ons-list-item>
+              <hr />
+
+            <ons-list-item   tappable modifier="nodivider" class="list-item-container"  onclick="showAuctionInfo()">
+              <ons-row>
+                <ons-col width="95px">
+                  <img src="images/location3.png" class="thumbnail">
+                </ons-col>
+                <ons-col >
+                  <div class="auction-title">
+                    Mount Fuji
+                  </div>
+                  <p></p>
+                  <div  class="name">
+                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                  </div>
+                  <div class="name">
+                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                  </div>
+                </ons-col>
+                <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
+              </ons-row>
+              <ons-row>
+                  <div class="desc">
+                    <p>Mount Fuji is the highest mountain in Japan and a frequent attractive subject of Japanese art.</p>
+                  </div>
+              </ons-row>
+              <ons-row style="text-align:center">
+                  <ons-col width="50%">
+                  <div class="location">
+                    <a href="#" onclick="window.open('https://www.google.ru/maps/@35.3605599,138.7255837,12z', '_system')"><i class="fa fa-map-marker"></i> Japan</a>
+                  </div>
+                  </ons-col>
+                  <ons-col width="50%">
+                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  </ons-col>
+              </ons-row>
+            </ons-list-item>
+              <hr />
+
+            <ons-list-item  tappable modifier="nodivider" class="list-item-container"  onclick="showAuctionInfo()">
+              <ons-row>
+                <ons-col width="95px">
+                  <img src="images/location4.png" class="thumbnail">
+                </ons-col>
+                <ons-col >
+                  <div class="auction-title">
+                    Tokyo Tower
+                  </div>
+                  <p></p>
+                  <div  class="name">
+                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                  </div>
+                  <div class="name">
+                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                  </div>
+                </ons-col>
+                <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
+              </ons-row>
+              <ons-row>
+                  <div class="desc">
+                    <p>Tokyo Tower is a communications and observation tower located in Tokyo, Japan.</p>
+                  </div>
+              </ons-row>
+              <ons-row style="text-align:center">
+                  <ons-col width="50%">
+                  <div class="location">
+                    <a href="#" onclick="window.open('https://www.google.ru/maps/@35.6586284,139.7452451,18z', '_system')"><i class="fa fa-map-marker"></i> Tokyo, Japan</a>
+                  </div>
+                  </ons-col>
+                  <ons-col width="50%">
+                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  </ons-col>
+              </ons-row>
+            </ons-list-item>
+              <hr />
+
+
+        </ons-list>
+        </div>
+    </ons-page>
+</ons-template>
+
+<ons-template id="HomeEarn.html">
+    <ons-page id="HomeEarn">
+        <ons-bottom-toolbar>
+          <div class="center navigation-bar__center" style="background-color:#fa0">Make more money with <a href="#">Referral Program</a></div>
+        </ons-bottom-toolbar>
+        <div class="content" style="text-align: center">
+        <p>List of auctions created by you:</p>
+              <hr />
+        <ons-list modifier="noborder">
+            
+            <ons-list-item  tappable modifier="nodivider" class="list-item-container" onclick="showAuctionInfo()">
+              <ons-row>
+                <ons-col width="95px">
+                  <img src="images/location1.png" class="thumbnail">
+                </ons-col>
+                <ons-col >
+                  <div class="auction-title">
+                    Eiffel Tower
+                  </div>
+                  <p></p>
+                  <div  class="name">
+                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                  </div>
+                  <div class="name">
+                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                  </div>
+                </ons-col>
+                <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
+              </ons-row>
+              <ons-row>
+                  <div class="desc">
+                    <p>Eiffel Tower is the symbol of Paris and named by Gustave Eiffel.</p>
+                  </div>
+              </ons-row>
+              <ons-row style="text-align:center">
+                  <ons-col width="50%">
+                  <div class="location">
+                    <a href="#" onclick="window.open('https://www.google.ru/maps/@48.8582889,2.2927593,17z', '_system')"><i class="fa fa-map-marker"></i> Paris, France</a>
+                  </div>
+                  </ons-col>
+                  <ons-col width="50%">
+                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  </ons-col>
+              </ons-row>
+            </ons-list-item>
+              <hr />
+
+            <ons-list-item   tappable modifier="nodivider" class="list-item-container"  onclick="showAuctionInfo()">
+              <ons-row>
+                <ons-col width="95px">
+                  <img src="images/location2.png" class="thumbnail">
+                </ons-col>
+                <ons-col >
+                  <div class="auction-title">
+                    Monument Valley
+                  </div>
+                  <p></p>
+                  <div  class="name">
+                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                  </div>
+                  <div class="name">
+                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                  </div>
+                </ons-col>
+                <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
+              </ons-row>
+              <ons-row>
+                  <div class="desc">
+                    <p>Director John Ford used Monument Valley for a number of his best-known films.</p>
+                  </div>
+              </ons-row>
+              <ons-row style="text-align:center">
+                  <ons-col width="50%">
+                  <div class="location">
+                    <a href="#" onclick="window.open('https://www.google.ru/maps/@37.0533978,-110.3478826,11.01z', '_system')"><i class="fa fa-map-marker"></i> Utah, USA</a>
+                  </div>
+                  </ons-col>
+                  <ons-col width="50%">
+                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  </ons-col>
+              </ons-row>
+            </ons-list-item>
+              <hr />
+
+            <ons-list-item   tappable modifier="nodivider" class="list-item-container"  onclick="showAuctionInfo()">
+              <ons-row>
+                <ons-col width="95px">
+                  <img src="images/location3.png" class="thumbnail">
+                </ons-col>
+                <ons-col >
+                  <div class="auction-title">
+                    Mount Fuji
+                  </div>
+                  <p></p>
+                  <div  class="name">
+                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                  </div>
+                  <div class="name">
+                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                  </div>
+                </ons-col>
+                <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
+              </ons-row>
+              <ons-row>
+                  <div class="desc">
+                    <p>Mount Fuji is the highest mountain in Japan and a frequent attractive subject of Japanese art.</p>
+                  </div>
+              </ons-row>
+              <ons-row style="text-align:center">
+                  <ons-col width="50%">
+                  <div class="location">
+                    <a href="#" onclick="window.open('https://www.google.ru/maps/@35.3605599,138.7255837,12z', '_system')"><i class="fa fa-map-marker"></i> Japan</a>
+                  </div>
+                  </ons-col>
+                  <ons-col width="50%">
+                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  </ons-col>
+              </ons-row>
+            </ons-list-item>
+              <hr />
+
+            <ons-list-item  tappable modifier="nodivider" class="list-item-container"  onclick="showAuctionInfo()">
+              <ons-row>
+                <ons-col width="95px">
+                  <img src="images/location4.png" class="thumbnail">
+                </ons-col>
+                <ons-col >
+                  <div class="auction-title">
+                    Tokyo Tower
+                  </div>
+                  <p></p>
+                  <div  class="name">
+                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                  </div>
+                  <div class="name">
+                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                  </div>
+                </ons-col>
+                <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
+              </ons-row>
+              <ons-row>
+                  <div class="desc">
+                    <p>Tokyo Tower is a communications and observation tower located in Tokyo, Japan.</p>
+                  </div>
+              </ons-row>
+              <ons-row style="text-align:center">
+                  <ons-col width="50%">
+                  <div class="location">
+                    <a href="#" onclick="window.open('https://www.google.ru/maps/@35.6586284,139.7452451,18z', '_system')"><i class="fa fa-map-marker"></i> Tokyo, Japan</a>
+                  </div>
+                  </ons-col>
+                  <ons-col width="50%">
+                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  </ons-col>
+              </ons-row>
+            </ons-list-item>
+              <hr />
+
+
+        </ons-list>
+        </div>
+    </ons-page>
+</ons-template>
+
+
 <ons-template id="tab1.html">
   <ons-page id="tab1">
     <ons-bottom-toolbar>
@@ -340,6 +746,27 @@
       </div>
     </ons-page>
   </ons-template>
+  
+
+<ons-template id="Auction.html">
+    <ons-page id="Auction">
+        <ons-toolbar>
+            <div class="left"><ons-back-button>Back</ons-back-button></div>
+            <div class="center">
+                Auction
+            </div>
+            <div class="right">
+                <ons-toolbar-button onclick="document.getElementById('navigator').resetToPage('Home.html')"><ons-icon icon="fa-home"></ons-icon></ons-toolbar-button>
+                <ons-toolbar-button><div class="notification events-notification">12</div><ons-icon icon="fa-bell"></ons-icon></ons-toolbar-button>
+                <ons-toolbar-button onclick="showMenuMore(this)"><ons-icon icon="fa-ellipsis-v"></ons-icon></ons-toolbar-button>
+            </div>
+        </ons-toolbar>
+        <div class="content" style="text-align: center">
+            <p>This is auction info page.</p>
+        </div>
+    </ons-page>
+</ons-template>
+  
 
 <ons-template id="Search.html">
     <ons-page id="Search">
@@ -350,14 +777,14 @@
             </div>
             <div class="right">
                 <ons-toolbar-button onclick="document.getElementById('navigator').resetToPage('Home.html')"><ons-icon icon="fa-home"></ons-icon></ons-toolbar-button>
-                <ons-toolbar-button><div class="notification events-notification">4</div><ons-icon icon="fa-bell"></ons-icon></ons-toolbar-button>
-                <ons-toolbar-button onclick="document.getElementById('menuMore').show(this)"><ons-icon icon="fa-ellipsis-v"></ons-icon></ons-toolbar-button>
+                <ons-toolbar-button><div class="notification events-notification">12</div><ons-icon icon="fa-bell"></ons-icon></ons-toolbar-button>
+                <ons-toolbar-button onclick="showMenuMore(this)"><ons-icon icon="fa-ellipsis-v"></ons-icon></ons-toolbar-button>
             </div>
         </ons-toolbar>
         <ons-tabbar position="top" animation="slide" id="SearchTabbar">
             <ons-tab icon="fa-crosshairs" label="Quick" page="SearchSimple.html"></ons-tab>
             <ons-tab icon="fa-sliders" label="Advanced" page="tab1.html"></ons-tab>
-            <ons-tab icon="fa-list-ol" label="Results" page="tab2.html"></ons-tab>
+            <ons-tab icon="fa-list-ol" label="Results" page="SearchResults.html"></ons-tab>
         </ons-tabbar>
     </ons-page>
 </ons-template>
@@ -381,6 +808,440 @@
       </div>
   </ons-page>
 </ons-template>
+
+<ons-template id="SearchResults.html">
+    <ons-page id="SearchResults">
+        <div class="content" style="text-align: center">
+        <p>Search results:</p>
+              <hr />
+        <ons-list modifier="noborder">
+            
+            <ons-list-item  tappable modifier="nodivider" class="list-item-container" onclick="showAuctionInfo()">
+              <ons-row>
+                <ons-col width="95px">
+                  <img src="images/location1.png" class="thumbnail">
+                </ons-col>
+                <ons-col >
+                  <div class="auction-title">
+                    Eiffel Tower
+                  </div>
+                  <p></p>
+                  <div  class="name">
+                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                  </div>
+                  <div class="name">
+                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                  </div>
+                </ons-col>
+                <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
+              </ons-row>
+              <ons-row>
+                  <div class="desc">
+                    <p>Eiffel Tower is the symbol of Paris and named by Gustave Eiffel.</p>
+                  </div>
+              </ons-row>
+              <ons-row style="text-align:center">
+                  <ons-col width="50%">
+                  <div class="location">
+                    <a href="#" onclick="window.open('https://www.google.ru/maps/@48.8582889,2.2927593,17z', '_system')"><i class="fa fa-map-marker"></i> Paris, France</a>
+                  </div>
+                  </ons-col>
+                  <ons-col width="50%">
+                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  </ons-col>
+              </ons-row>
+            </ons-list-item>
+              <hr />
+
+            <ons-list-item   tappable modifier="nodivider" class="list-item-container"  onclick="showAuctionInfo()">
+              <ons-row>
+                <ons-col width="95px">
+                  <img src="images/location2.png" class="thumbnail">
+                </ons-col>
+                <ons-col >
+                  <div class="auction-title">
+                    Monument Valley
+                  </div>
+                  <p></p>
+                  <div  class="name">
+                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                  </div>
+                  <div class="name">
+                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                  </div>
+                </ons-col>
+                <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
+              </ons-row>
+              <ons-row>
+                  <div class="desc">
+                    <p>Director John Ford used Monument Valley for a number of his best-known films.</p>
+                  </div>
+              </ons-row>
+              <ons-row style="text-align:center">
+                  <ons-col width="50%">
+                  <div class="location">
+                    <a href="#" onclick="window.open('https://www.google.ru/maps/@37.0533978,-110.3478826,11.01z', '_system')"><i class="fa fa-map-marker"></i> Utah, USA</a>
+                  </div>
+                  </ons-col>
+                  <ons-col width="50%">
+                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  </ons-col>
+              </ons-row>
+            </ons-list-item>
+              <hr />
+
+            <ons-list-item   tappable modifier="nodivider" class="list-item-container"  onclick="showAuctionInfo()">
+              <ons-row>
+                <ons-col width="95px">
+                  <img src="images/location3.png" class="thumbnail">
+                </ons-col>
+                <ons-col >
+                  <div class="auction-title">
+                    Mount Fuji
+                  </div>
+                  <p></p>
+                  <div  class="name">
+                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                  </div>
+                  <div class="name">
+                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                  </div>
+                </ons-col>
+                <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
+              </ons-row>
+              <ons-row>
+                  <div class="desc">
+                    <p>Mount Fuji is the highest mountain in Japan and a frequent attractive subject of Japanese art.</p>
+                  </div>
+              </ons-row>
+              <ons-row style="text-align:center">
+                  <ons-col width="50%">
+                  <div class="location">
+                    <a href="#" onclick="window.open('https://www.google.ru/maps/@35.3605599,138.7255837,12z', '_system')"><i class="fa fa-map-marker"></i> Japan</a>
+                  </div>
+                  </ons-col>
+                  <ons-col width="50%">
+                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  </ons-col>
+              </ons-row>
+            </ons-list-item>
+              <hr />
+
+            <ons-list-item  tappable modifier="nodivider" class="list-item-container"  onclick="showAuctionInfo()">
+              <ons-row>
+                <ons-col width="95px">
+                  <img src="images/location4.png" class="thumbnail">
+                </ons-col>
+                <ons-col >
+                  <div class="auction-title">
+                    Tokyo Tower
+                  </div>
+                  <p></p>
+                  <div  class="name">
+                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                  </div>
+                  <div class="name">
+                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                  </div>
+                </ons-col>
+                <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
+              </ons-row>
+              <ons-row>
+                  <div class="desc">
+                    <p>Tokyo Tower is a communications and observation tower located in Tokyo, Japan.</p>
+                  </div>
+              </ons-row>
+              <ons-row style="text-align:center">
+                  <ons-col width="50%">
+                  <div class="location">
+                    <a href="#" onclick="window.open('https://www.google.ru/maps/@35.6586284,139.7452451,18z', '_system')"><i class="fa fa-map-marker"></i> Tokyo, Japan</a>
+                  </div>
+                  </ons-col>
+                  <ons-col width="50%">
+                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  </ons-col>
+              </ons-row>
+            </ons-list-item>
+              <hr />
+
+
+        </ons-list>
+        </div>
+    </ons-page>
+</ons-template>
+
+
+<ons-template id="History.html">
+    <ons-page id="History">
+        <ons-toolbar>
+            <div class="left"><ons-back-button>Back</ons-back-button></div>
+            <div class="center">
+                History
+            </div>
+            <div class="right">
+                <ons-toolbar-button onclick="FilterHistory()"><ons-icon icon="fa-filter"></ons-icon></ons-toolbar-button>
+                <ons-toolbar-button onclick="ClearHistory()"><ons-icon icon="fa-eraser"></ons-icon></ons-toolbar-button>
+                <!--<ons-toolbar-button><div class="notification events-notification">12</div><ons-icon icon="fa-bell"></ons-icon></ons-toolbar-button>-->
+                <ons-toolbar-button onclick="showMenuMore(this)"><ons-icon icon="fa-ellipsis-v"></ons-icon></ons-toolbar-button>
+            </div>
+        </ons-toolbar>
+        <div modifier="material" class="navigation-bar navigation-bar--material">
+          <!--<div class="left">
+            Only active <ons-switch checked></ons-switch>
+          </div>-->
+          <div class="navigation-bar--material__center"  style="vertical-align: middle;">
+    
+            <input type="search" class="search-input" style="width: 100%; margin: 6px auto 6px auto;display: inline-block;vertical-align: middle;" placeholder="Search">
+            <!--<ons-toolbar-button style="vertical-align: middle;"><ons-icon icon="fa-bell"></ons-icon></ons-toolbar-button>-->
+
+          </div>
+        </div>
+        
+        <div class="content" style="text-align: center">
+        <p>Previously viewed auctions:</p>
+              <hr />
+        <ons-list modifier="noborder">
+            
+            <ons-list-item  tappable modifier="nodivider" class="list-item-container" onclick="showAuctionInfo()">
+              <ons-row>
+                <ons-col width="95px">
+                  <img src="images/location1.png" class="thumbnail">
+                </ons-col>
+                <ons-col >
+                  <div class="auction-title">
+                    Eiffel Tower
+                  </div>
+                  <p></p>
+                  <div  class="name">
+                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                  </div>
+                  <div class="name">
+                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                  </div>
+                </ons-col>
+                <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
+              </ons-row>
+              <ons-row>
+                  <div class="desc">
+                    <p>Eiffel Tower is the symbol of Paris and named by Gustave Eiffel.</p>
+                  </div>
+              </ons-row>
+              <ons-row style="text-align:center">
+                  <ons-col width="50%">
+                  <div class="location">
+                    <a href="#" onclick="window.open('https://www.google.ru/maps/@48.8582889,2.2927593,17z', '_system')"><i class="fa fa-map-marker"></i> Paris, France</a>
+                  </div>
+                  </ons-col>
+                  <ons-col width="50%">
+                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  </ons-col>
+              </ons-row>
+            </ons-list-item>
+              <hr />
+
+            <ons-list-item   tappable modifier="nodivider" class="list-item-container"  onclick="showAuctionInfo()">
+              <ons-row>
+                <ons-col width="95px">
+                  <img src="images/location2.png" class="thumbnail">
+                </ons-col>
+                <ons-col >
+                  <div class="auction-title">
+                    Monument Valley
+                  </div>
+                  <p></p>
+                  <div  class="name">
+                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                  </div>
+                  <div class="name">
+                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                  </div>
+                </ons-col>
+                <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
+              </ons-row>
+              <ons-row>
+                  <div class="desc">
+                    <p>Director John Ford used Monument Valley for a number of his best-known films.</p>
+                  </div>
+              </ons-row>
+              <ons-row style="text-align:center">
+                  <ons-col width="50%">
+                  <div class="location">
+                    <a href="#" onclick="window.open('https://www.google.ru/maps/@37.0533978,-110.3478826,11.01z', '_system')"><i class="fa fa-map-marker"></i> Utah, USA</a>
+                  </div>
+                  </ons-col>
+                  <ons-col width="50%">
+                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  </ons-col>
+              </ons-row>
+            </ons-list-item>
+              <hr />
+
+            <ons-list-item   tappable modifier="nodivider" class="list-item-container"  onclick="showAuctionInfo()">
+              <ons-row>
+                <ons-col width="95px">
+                  <img src="images/location3.png" class="thumbnail">
+                </ons-col>
+                <ons-col >
+                  <div class="auction-title">
+                    Mount Fuji
+                  </div>
+                  <p></p>
+                  <div  class="name">
+                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                  </div>
+                  <div class="name">
+                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                  </div>
+                </ons-col>
+                <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
+              </ons-row>
+              <ons-row>
+                  <div class="desc">
+                    <p>Mount Fuji is the highest mountain in Japan and a frequent attractive subject of Japanese art.</p>
+                  </div>
+              </ons-row>
+              <ons-row style="text-align:center">
+                  <ons-col width="50%">
+                  <div class="location">
+                    <a href="#" onclick="window.open('https://www.google.ru/maps/@35.3605599,138.7255837,12z', '_system')"><i class="fa fa-map-marker"></i> Japan</a>
+                  </div>
+                  </ons-col>
+                  <ons-col width="50%">
+                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  </ons-col>
+              </ons-row>
+            </ons-list-item>
+              <hr />
+
+            <ons-list-item  tappable modifier="nodivider" class="list-item-container"  onclick="showAuctionInfo()">
+              <ons-row>
+                <ons-col width="95px">
+                  <img src="images/location4.png" class="thumbnail">
+                </ons-col>
+                <ons-col >
+                  <div class="auction-title">
+                    Tokyo Tower
+                  </div>
+                  <p></p>
+                  <div  class="name">
+                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                  </div>
+                  <div class="name">
+                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                  </div>
+                </ons-col>
+                <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
+              </ons-row>
+              <ons-row>
+                  <div class="desc">
+                    <p>Tokyo Tower is a communications and observation tower located in Tokyo, Japan.</p>
+                  </div>
+              </ons-row>
+              <ons-row style="text-align:center">
+                  <ons-col width="50%">
+                  <div class="location">
+                    <a href="#" onclick="window.open('https://www.google.ru/maps/@35.6586284,139.7452451,18z', '_system')"><i class="fa fa-map-marker"></i> Tokyo, Japan</a>
+                  </div>
+                  </ons-col>
+                  <ons-col width="50%">
+                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  </ons-col>
+              </ons-row>
+            </ons-list-item>
+              <hr />
+
+
+        </ons-list>
+        </div>
+        
+    </ons-page>
+</ons-template>
+
+<ons-alert-dialog id="dialogConfirmClearHistory" cancelable >
+  <div class="alert-dialog-title">Clear history</div>
+  <div class="alert-dialog-content">
+    <p>Do you want clear history of previously viewed auctions?</p>
+  <ons-list>
+    <!--<ons-list-header>Clear auctions:</ons-list-header>-->
+    <ons-list-item tappable>
+      <label class="left">
+        <ons-input name="clear" type="radio" input-id="clearAll" checked></ons-input>
+      </label>
+      <label for="clearAll" class="center">
+        All auctions
+      </label>
+    </ons-list-item>
+    <ons-list-item tappable>
+      <label class="left">
+        <ons-input name="clear" type="radio" input-id="clearClosed"></ons-input>
+      </label>
+      <label for="clearClosed" class="center">
+        Closed only
+      </label>
+    </ons-list-item>
+  </ons-list>
+  </div>
+  <div class="alert-dialog-footer">
+    <button class="alert-dialog-button" onclick="hideDialog('dialogConfirmClearHistory')">Cancel</button>
+    <button class="alert-dialog-button" onclick="hideDialog('dialogConfirmClearHistory')">OK</button>
+  </div>
+</ons-alert-dialog>
+
+
+<ons-alert-dialog id="dialogFilterHistory" cancelable >
+  <div class="alert-dialog-title">History filters</div>
+  <div class="alert-dialog-content">
+    <ons-list>
+        <ons-list-item >
+          <div class="center">
+            Only active auctions
+          </div>
+          <div class="right">
+            <ons-switch></ons-switch>
+          </div>
+        </ons-list-item>
+        
+        <ons-list-header>Viewed:</ons-list-header>
+        <ons-list-item tappable>
+            <label class="right">
+                <ons-input name="HistoryDates" type="radio" input-id="HistoryToday"></ons-input>
+            </label>
+            <label for="HistoryToday" class="center">
+                Today
+            </label>
+        </ons-list-item>
+        <ons-list-item tappable>
+            <label class="right">
+                <ons-input name="HistoryDates" type="radio" input-id="History7Days"></ons-input>
+            </label>
+            <label for="History7Days" class="center">
+                Last 7 days
+            </label>
+        </ons-list-item>
+        <ons-list-item tappable>
+            <label class="right">
+                <ons-input name="HistoryDates" type="radio" input-id="History30Days"></ons-input>
+            </label>
+            <label for="History30Days" class="center">
+                Last 30 days
+            </label>
+        </ons-list-item>
+        <ons-list-item tappable>
+            <label class="right">
+                <ons-input name="HistoryDates" type="radio" input-id="HistoryAllTime" checked></ons-input>
+            </label>
+            <label for="HistoryAllTime" class="center">
+                All time
+            </label>
+        </ons-list-item>
+    </ons-list>
+  </div>
+  <div class="alert-dialog-footer">
+    <button class="alert-dialog-button" onclick="hideDialog('dialogFilterHistory')">Cancel</button>
+    <button class="alert-dialog-button" onclick="hideDialog('dialogFilterHistory')">OK</button>
+  </div>
+</ons-alert-dialog>
+
 
 <ons-template id="menuMore.html">
 <ons-popover direction="down" cancelable cover-target id="menuMore">
@@ -415,6 +1276,100 @@
     </div>
 </ons-popover>
 </ons-template>  
-  
+
+
+<ons-template id="menuAuction.html">
+<ons-popover direction="down" cancelable cover-target id="menuAuction">
+    <ons-list>
+        <ons-list-item tappable>
+          <div class="left">
+            <ons-icon icon="fa-info" class="list__item__icon" fixed-width="true"></ons-icon>
+          </div>
+          <div class="center">
+            Details
+          </div>
+        </ons-list-item>
+        <ons-list-item tappable>
+          <div class="left">
+            <ons-icon icon="fa-gavel" class="list__item__icon" fixed-width="true"></ons-icon>
+          </div>
+          <div class="center">
+            Make a bid
+          </div>
+        </ons-list-item>
+        <ons-list-item tappable>
+          <div class="left">
+            <ons-icon icon="fa-eye" class="list__item__icon" fixed-width="true"></ons-icon>
+          </div>
+          <div class="center">
+            Watch
+          </div>
+        </ons-list-item>
+    </ons-list>
+    <div style="padding: 10px; text-align: center;">
+            <ons-button modifier="outline" onclick="document.getElementById('menuAuction').hide()">Cancel</ons-button>
+    </div>
+</ons-popover>
+</ons-template>  
+
+<!--
+<ons-template id="popupFilterHistory.html">
+<ons-popover direction="down" id="popupFilterHistory">
+    <div style="padding: 10px;" class="alert-dialog-title alert-dialog-title--material">
+        History filters
+    </div>
+    <ons-list>
+        <ons-list-item >
+          <div class="center">
+            Only active auctions
+          </div>
+          <div class="right">
+            <ons-switch></ons-switch>
+          </div>
+        </ons-list-item>
+        
+        <ons-list-header>Viewed:</ons-list-header>
+        <ons-list-item tappable>
+            <label class="right">
+                <ons-input name="HistoryDates" type="radio" input-id="HistoryToday"></ons-input>
+            </label>
+            <label for="HistoryToday" class="center">
+                Today
+            </label>
+        </ons-list-item>
+        <ons-list-item tappable>
+            <label class="right">
+                <ons-input name="HistoryDates" type="radio" input-id="History7Days"></ons-input>
+            </label>
+            <label for="History7Days" class="center">
+                Last 7 days
+            </label>
+        </ons-list-item>
+        <ons-list-item tappable>
+            <label class="right">
+                <ons-input name="HistoryDates" type="radio" input-id="History30Days"></ons-input>
+            </label>
+            <label for="History30Days" class="center">
+                Last 30 days
+            </label>
+        </ons-list-item>
+        <ons-list-item tappable>
+            <label class="right">
+                <ons-input name="HistoryDates" type="radio" input-id="HistoryAllTime" checked></ons-input>
+            </label>
+            <label for="HistoryAllTime" class="center">
+                All time
+            </label>
+        </ons-list-item>
+         
+    </ons-list>
+    <div style="padding: 10px; text-align: center;">
+            <ons-button modifier="outline" onclick="document.getElementById('popupFilterHistory').hide()">Ok</ons-button>
+            <ons-button modifier="outline" onclick="document.getElementById('popupFilterHistory').hide()">Cancel</ons-button>
+    </div>
+</ons-popover>
+</ons-template>  
+-->
+
 </body>
 </html>
