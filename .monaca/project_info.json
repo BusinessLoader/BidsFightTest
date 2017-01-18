@@ -17,6 +17,9 @@
         },
         "phonegap-plugin-barcodescanner": {
             "variables": []
+        },
+        "cordova-plugin-x-toast": {
+            "variables": []
         }
     },
     "external_plugins": [
@@ -31,7 +34,9 @@
         "cordova-plugin-geolocation@2.2.0",
         "cordova-plugin-device@1.1.2",
         "phonegap-plugin-barcodescanner",
-        "cordova-plugin-dialogs@1.2.1"
+        "cordova-plugin-dialogs@1.2.1",
+        "cordova-plugin-network-information@1.2.1",
+        "cordova-plugin-x-toast"
     ],
     "title-ja": "",
     "title-en": "",

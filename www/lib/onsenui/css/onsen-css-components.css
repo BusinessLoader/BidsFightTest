@@ -5419,7 +5419,7 @@ input[type="search"].search-input::-webkit-search-cancel-button {
   padding: 0 24px;
   margin: 24px 0 10px 0;
   min-height: 0;
-  color: #555;
+  color: #333;
 }
 .alert-dialog-footer--material {
   display: inline-block;

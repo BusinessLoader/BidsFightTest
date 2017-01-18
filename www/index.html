@@ -36,6 +36,24 @@
         }
         
     }
+
+    document.addEventListener('preshow', onPreshowAlertDialog);        
+    document.addEventListener('change', onChangeEvent); //если название функции onChange - то не срабатывает. Видимо, пересекается с каким-то стандартным обработчиком HTML       
+
+    function onPreshowAlertDialog(event)
+    {
+        if ( event.target.matches('#dialogConnectionLost') )
+        {
+            document.getElementById('dontShowConnectionAlert').checked = !showConnectionAlert;
+        }
+    }
+    
+    function onChangeEvent(event)
+    {
+        //Событие приходит не только на событие смены ориентации, но и на изменение галочки чекбокса или других контролов, поскольку название события одинаковое. Нужно фильтровать по объекту.
+        //alert("orientation changed: event.isPortrait = " + event.isPortrait + "  ons.orientation.isPortrait() = " + ons.orientation.isPortrait());
+        //console.log("orientation changed: event.isPortrait = " + event.isPortrait + "  ons.orientation.isPortrait() = " + ons.orientation.isPortrait());
+    }
     
     window.fn = {};
     
@@ -57,7 +75,99 @@
     function onDeviceReady()
     {
         //alert('deviceready');
+        document.addEventListener("offline", onOffline, false);
+        document.addEventListener("online", onOnline, false);
+
     }
+    
+    var connectionTimerId = -1;
+    var showConnectionAlert = true;
+    
+    function connectionLost()
+    {
+        //Если объекста connection нет (такое случается в десктопных браузерах) - ничего не делаем
+        if ( navigator.connection === undefined )
+            return;
+            
+        //Если обрыв связи не восстановился - предупредить пользователя
+        if ( navigator.connection.type == Connection.NONE )
+        {
+            //если активна опция показа предупреждения разрыва соединения - показать диалог с пиканьем и вибрацией
+            if ( showConnectionAlert )
+            {
+                navigator.notification.beep(1);
+                navigator.vibrate(1000);
+                //ons.notification.alert({messageHTML:"<p>Internet connection is lost!</p>Please make sure that you can control your auctions in another way!", title:"ERROR", cancelable:true});
+                showDialog('dialogConnectionLost');
+            }
+            //иначе тихо показать всплывающий и исчезающий toast
+            else
+            {
+                window.plugins.toast.showWithOptions({
+                    message: "Internet connection is lost!",
+                    duration: 5000, 
+                    position: "bottom",
+                    addPixelsY: -50,
+                    styling:
+                    {
+                        opacity: 0.8, // 0.0 (transparent) to 1.0 (opaque). Default 0.8 
+                        backgroundColor: '#dd8888', // make sure you use #RRGGBB. Default #333333 
+                        textColor: '#333333', // Ditto. Default #FFFFFF 
+                        textSize: 16, // Default is approx. 13. 
+                        //cornerRadius: 16, // minimum is 0 (square). iOS default 20, Android default 100 
+                        //horizontalPadding: 20, // iOS default 16, Android default 50 
+                        //verticalPadding: 16 // iOS default 12, Android default 30 
+                    }
+                });            
+            }
+        }
+        
+        connectionTimerId = -1;
+    }
+
+    function onOffline()
+    {
+        // Handle the offline event
+        //подождать 30 секунд после разрыва связи, чтобы не долбить пользователя по случайным недолгим пропаданиям сотового сигнала 
+        //иногда событие offline приходит два раза при одном обрыве (иногда сразу одно за одним), запускаются два таймера и потом показываются два диалога подряд
+        //поэтому сначала проверяем, что таймер ещё не был запущен
+        if ( connectionTimerId == -1 )
+        {
+            connectionTimerId = setTimeout(connectionLost,30000);
+            //alert(connectionTimerId);
+        }
+    }        
+
+    function onOnline()
+    {
+        // Handle the online event
+        //Если обрыв связи быстро восстановился - отменить показ предупреждения
+        if ( connectionTimerId != -1 )
+        {
+            clearTimeout(connectionTimerId);
+            connectionTimerId = -1;
+        }
+        //если обрыв был долгим, то показать всплывающее уведомление о восстановлении связи
+        else
+        {
+            window.plugins.toast.showWithOptions({
+                message: "Internet connection is restored",
+                duration: 4000, 
+                position: "bottom",
+                addPixelsY: -50,
+                styling:
+                {
+                    opacity: 0.8, // 0.0 (transparent) to 1.0 (opaque). Default 0.8 
+                    backgroundColor: '#88dd88', // make sure you use #RRGGBB. Default #333333 
+                    textColor: '#333333', // Ditto. Default #FFFFFF 
+                    textSize: 16, // Default is approx. 13. 
+                    //cornerRadius: 16, // minimum is 0 (square). iOS default 20, Android default 100 
+                    //horizontalPadding: 20, // iOS default 16, Android default 50 
+                    //verticalPadding: 16 // iOS default 12, Android default 30 
+                }
+            });            
+        }
+    }        
 
     function showAuctionInfo()
     {
@@ -106,6 +216,8 @@
             document.getElementById('SearchTabbar').setActiveTab(index);
         //}
 
+      } else if (page.matches('#SettingsNotifications')) {
+            document.getElementById('showConnectionAlert').checked = showConnectionAlert;
       }
     });
     
@@ -212,7 +324,7 @@
 
     function ClearHistory()
     {
-        showDialog('dialogConfirmClearHistory')
+        showDialog('dialogConfirmClearHistory');
         /*ons
             .notification.confirm(, {title:"Clear history", cancelable:true})
             .then(function(button)
@@ -226,7 +338,7 @@
 
     function FilterHistory()
     {
-        showDialog('dialogFilterHistory')
+        showDialog('dialogFilterHistory');
     }
 
     
@@ -292,7 +404,7 @@
             <span class="notification">12</span>
           </div>
         </ons-list-item>
-        <ons-list-item tappable>
+        <ons-list-item tappable onclick="fn.load('Settings.html')">
           <div class="left">
             <ons-icon icon="fa-cog" class="list__item__icon" fixed-width="true"></ons-icon>
           </div>
@@ -316,17 +428,6 @@
             About
           </div>
         </ons-list-item>
-        
-        <!--<ons-list-item onclick="document.querySelector('#menuMain').close(); document.querySelector('#navigator').resetToPage('home.html')" tappable>
-          Home
-        </ons-list-item>
-        <ons-list-item onclick="fn.load('page2.html')" tappable>
-          Settings
-        </ons-list-item>
-        <ons-list-item onclick="fn.load('about.html')" tappable>
-          About
-        </ons-list-item>-->
-        
       </ons-list>
     </ons-page>
   </ons-splitter-side>
@@ -369,7 +470,7 @@
         <p>Please don't lost your time!<ons-if orientation="portrait">BREAK<br /></ons-if>&nbspFind and win auction right now.</p>
         <p>Be the first. Get more!</p>
         <ons-if orientation="portrait"><p>&nbspVERTICAL ORIENTATION</p></ons-if>
-        <ons-button id="push-button" class="buttonCTA animated pulse animatedBtn" onclick="document.getElementById('navigator').pushPage('Search.html')">
+        <ons-button id="push-button" class="buttonCTA animated pulse animatedBtn" onclick="alert('isPortrait = '+ ons.orientation.isPortrait());document.getElementById('navigator').pushPage('Search.html')">
             <!--<ons-icon icon="fa-search"></ons-icon>-->
             Find and win!
         </ons-button>
@@ -395,10 +496,10 @@
                   </div>
                   <p></p>
                   <div  class="name">
-                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                    Current bid: <span style="font-weight:800; color:#070">$123</span>
                   </div>
                   <div class="name">
-                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                    Time to left: <span style="font-weight:800; color:#c00">1h 15m</span>
                   </div>
                 </ons-col>
                 <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
@@ -997,8 +1098,8 @@
           </div>
         </div>
         
-        <div class="content" style="text-align: center">
-        <p>Previously viewed auctions:</p>
+        <!--<div class="content" style="text-align: center">-->
+        <p style="text-align: center">Previously viewed auctions:</p>
               <hr />
         <ons-list modifier="noborder">
             
@@ -1149,8 +1250,89 @@
               </ons-row>
             </ons-list-item>
               <hr />
+        </ons-list>
+        <!--</div>-->
+    </ons-page>
+</ons-template>
 
 
+<ons-template id="Settings.html">
+    <ons-page id="Settings">
+        <ons-toolbar>
+            <div class="left"><ons-back-button>Back</ons-back-button></div>
+            <div class="center">
+                Settings
+            </div>
+            <div class="right">
+                <!--<ons-toolbar-button onclick="FilterHistory()"><ons-icon icon="fa-filter"></ons-icon></ons-toolbar-button>-->
+                <!--<ons-toolbar-button onclick="ClearHistory()"><ons-icon icon="fa-eraser"></ons-icon></ons-toolbar-button>-->
+                <!--<ons-toolbar-button><div class="notification events-notification">12</div><ons-icon icon="fa-bell"></ons-icon></ons-toolbar-button>-->
+                <ons-toolbar-button onclick="showMenuMore(this)"><ons-icon icon="fa-ellipsis-v"></ons-icon></ons-toolbar-button>
+            </div>
+        </ons-toolbar>
+        
+        <p style="text-align: center; margin: 16px">Here you can change the settings to more useful for you:</p>
+              <hr />
+        <ons-list modifier="noborder">
+            <ons-list-item tappable modifier="longdivider" >
+            <div class="left"><ons-icon icon="fa-cog" class="list__item__icon"></ons-icon></div>
+            <div class="center">General</div>
+            <div class="right"><ons-icon icon="fa-chevron-right" class="list__item__icon"></ons-icon></div>
+            </ons-list-item>
+            <ons-list-item tappable modifier="longdivider" >
+            <div class="left"><ons-icon icon="fa-user" class="list__item__icon"></ons-icon></div>
+            <div class="center">Profile</div>
+            <div class="right"><ons-icon icon="fa-chevron-right" class="list__item__icon"></ons-icon></div>
+            </ons-list-item>
+            <ons-list-item tappable modifier="longdivider" onclick="fn.load('SettingsNotifications.html')">
+            <div class="left"><ons-icon icon="fa-bell" class="list__item__icon"></ons-icon></div>
+            <div class="center">Notifications</div>
+            <div class="right"><ons-icon icon="fa-chevron-right" class="list__item__icon"></ons-icon></div>
+            </ons-list-item>
+            <ons-list-item tappable modifier="longdivider" >
+            <div class="left"><ons-icon icon="fa-picture-o" class="list__item__icon"></ons-icon></div>
+            <div class="center">Appearance</div>
+            <div class="right"><ons-icon icon="fa-chevron-right" class="list__item__icon"></ons-icon></div>
+            </ons-list-item>
+            <ons-list-item tappable modifier="longdivider" >
+            <div class="left"><ons-icon icon="fa-money" class="list__item__icon"></ons-icon></div>
+            <div class="center">Payments</div>
+            <div class="right"><ons-icon icon="fa-chevron-right" class="list__item__icon"></ons-icon></div>
+            </ons-list-item>
+            <ons-list-item tappable modifier="longdivider" >
+            <div class="left"><ons-icon icon="fa-cogs" class="list__item__icon"></ons-icon></div>
+            <div class="center">Advanced</div>
+            <div class="right"><ons-icon icon="fa-chevron-right" class="list__item__icon"></ons-icon></div>
+            </ons-list-item>
+        </ons-list>
+        </div>
+              <hr />
+        <p style="text-align: center; margin: 16px">If you want to propose any additional settings - <a href="#">let us know!</a></p>
+        
+    </ons-page>
+</ons-template>
+
+<ons-template id="SettingsNotifications.html">
+    <ons-page id="SettingsNotifications">
+        <ons-toolbar>
+            <div class="left"><ons-back-button>Back</ons-back-button></div>
+            <div class="center">
+                Notifications
+            </div>
+            <div class="right">
+                <ons-toolbar-button onclick="document.getElementById('navigator').resetToPage('Home.html')"><ons-icon icon="fa-home"></ons-icon></ons-toolbar-button>
+                <ons-toolbar-button><div class="notification events-notification">12</div><ons-icon icon="fa-bell"></ons-icon></ons-toolbar-button>
+                <ons-toolbar-button onclick="showMenuMore(this)"><ons-icon icon="fa-ellipsis-v"></ons-icon></ons-toolbar-button>
+            </div>
+        </ons-toolbar>
+        
+        <p style="text-align: center; margin: 16px">Here you can change the settings for notifications:</p>
+              <hr />
+        <ons-list modifier="noborder">
+            <ons-list-item modifier="longdivider" >
+            <div class="center">Internet connection alert</div>
+            <div class="right"><ons-switch id="showConnectionAlert" onchange="showConnectionAlert = this.checked;"></ons-switch></div>
+            </ons-list-item>
         </ons-list>
         </div>
         
@@ -1239,6 +1421,24 @@
   <div class="alert-dialog-footer">
     <button class="alert-dialog-button" onclick="hideDialog('dialogFilterHistory')">Cancel</button>
     <button class="alert-dialog-button" onclick="hideDialog('dialogFilterHistory')">OK</button>
+  </div>
+</ons-alert-dialog>
+
+<ons-alert-dialog id="dialogConnectionLost" cancelable >
+  <div class="alert-dialog-title"><ons-icon icon="fa-exclamation-triangle" style="color: #fa0" size="20px"></ons-icon> WARNING</div>
+  <div class="alert-dialog-content">
+    <p>Internet connection is lost!</p>
+    <p>Please make sure that you can control your auctions in another way!</p>
+    <p style="text-align:center"><img src="images/no_plug.png"/></p>
+    <p>
+    <!--<ons-row vertical-align="center" >-->
+        <ons-input type="checkbox" input-id="dontShowConnectionAlert" onchange="document.getElementById('dialogConnectionLost').cancelable = false;"></ons-input>
+        <ons-input><label for="dontShowConnectionAlert" >Don't show again</label></ons-input>
+    <!--</ons-row>-->
+    </p>
+  </div>
+  <div class="alert-dialog-footer">
+    <button class="alert-dialog-button" onclick="showConnectionAlert = !document.getElementById('dontShowConnectionAlert').checked; hideDialog('dialogConnectionLost')">OK</button>
   </div>
 </ons-alert-dialog>
 
