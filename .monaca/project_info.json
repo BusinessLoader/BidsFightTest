@@ -36,7 +36,8 @@
         "phonegap-plugin-barcodescanner",
         "cordova-plugin-dialogs@1.2.1",
         "cordova-plugin-network-information@1.2.1",
-        "cordova-plugin-x-toast"
+        "cordova-plugin-x-toast",
+        "cordova-universal-links-plugin"
     ],
     "title-ja": "",
     "title-en": "",

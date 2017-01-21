@@ -108,4 +108,25 @@
   <preference name="Orientation" value="default"/>
   <preference name="SplashScreenDelay" value="3000"/>
   <preference name="Fullscreen" value="false"/>
+  
+    <preference name="AndroidLaunchMode" value="singleInstance" /><!-- для предотвращения запуска нескольких экземпляров приложения при клике на ссылку в почте и т.д.-->
+    <universal-links><!-- плагин cordova-universal-links-plugin для запуска приложения при клике на ссылку сайта в почте, на сайтах и т.д.-->
+        <!--<host name="*bidsfight.com" scheme="http" event="universallinks">-->
+        <host name="*.bidsfight.com" scheme="http">
+            <path url="*/auction?*" event="openAuctionPageFromLink" />
+            <path url="*" event="launchedAppFromLink" />
+        </host>
+        <host name="bidsfight.com" scheme="http">
+            <path url="*/auction?*" event="openAuctionPageFromLink" />
+            <path url="*" event="launchedAppFromLink" />
+        </host>
+        <host name="*.bidsfight.com" scheme="https">
+            <path url="*/auction?*" event="openAuctionPageFromLink" />
+            <path url="*" event="launchedAppFromLink" />
+        </host>
+        <host name="bidsfight.com" scheme="https">
+            <path url="*/auction?*" event="openAuctionPageFromLink" />
+            <path url="*" event="launchedAppFromLink" />
+        </host>
+    </universal-links>  
 </widget>

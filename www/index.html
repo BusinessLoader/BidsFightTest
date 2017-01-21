@@ -75,13 +75,49 @@
     function onDeviceReady()
     {
         //alert('deviceready');
+        
         document.addEventListener("offline", onOffline, false);
         document.addEventListener("online", onOnline, false);
+        universalLinks.subscribe("openAuctionPageFromLink",onOpenAuctionPageFromLink);
+        universalLinks.subscribe("launchedAppFromLink",onLaunchedAppFromLink);
+        //universalLinks.subscribe("universallinks",onuniversallinks);
 
     }
     
+    /*function onuniversallinks(eventData)
+    {
+        alert("onuniversallinks");
+    }*/
+    
+    function onLaunchedAppFromLink(eventData)
+    {
+        //alert("onLaunchedAppFromLink");
+    }
+    
+    function onOpenAuctionPageFromLink(eventData)
+    {
+        //alert("onOpenAuctionPageFromLink");
+        if ( eventData.url.toLowerCase().indexOf("bidsfight.com/auction") == -1 )
+            return;
+        if ( !eventData.params.id )
+            return;
+        
+        fn.load('Auction.html');
+        
+    }
+    
     var connectionTimerId = -1;
-    var showConnectionAlert = true;
+    var showConnectionAlert = window.localStorage.getItem("showConnectionAlert");
+    if ( showConnectionAlert == null )
+    {
+        showConnectionAlert = true;
+    }
+    else
+    {
+        showConnectionAlert = JSON.parse(showConnectionAlert);
+    }
+    //alert("start showConnectionAlert="+showConnectionAlert);
+    var showConnectionRestored = false;
     
     function connectionLost()
     {
@@ -120,6 +156,9 @@
                     }
                 });            
             }
+            
+            //выставить флаг, что при восстановлении соединения необходимо показать toast
+            showConnectionRestored = true;
         }
         
         connectionTimerId = -1;
@@ -141,14 +180,14 @@
     function onOnline()
     {
         // Handle the online event
-        //Если обрыв связи быстро восстановился - отменить показ предупреждения
+        //Если обрыв связи быстро восстановился - отменить показ предупреждения о разрыве
         if ( connectionTimerId != -1 )
         {
             clearTimeout(connectionTimerId);
             connectionTimerId = -1;
         }
-        //если обрыв был долгим, то показать всплывающее уведомление о восстановлении связи
-        else
+        //если обрыв был долгим и мы успели показать сообщение о потере связи, то показать всплывающее уведомление о восстановлении связи
+        else if ( showConnectionRestored )
         {
             window.plugins.toast.showWithOptions({
                 message: "Internet connection is restored",
@@ -165,7 +204,9 @@
                     //horizontalPadding: 20, // iOS default 16, Android default 50 
                     //verticalPadding: 16 // iOS default 12, Android default 30 
                 }
-            });            
+            });
+            
+            showConnectionRestored = false;
         }
     }        
 
@@ -218,6 +259,7 @@
 
       } else if (page.matches('#SettingsNotifications')) {
             document.getElementById('showConnectionAlert').checked = showConnectionAlert;
+            //alert("init settings showConnectionAlert="+showConnectionAlert+" checked="+document.getElementById('showConnectionAlert').checked);
       }
     });
     
@@ -258,7 +300,7 @@
                     message = "Only the QR-Code is applicable.<br/>Please use the correct QR-Code.";
                     error = true;
                 }
-                else if ( result.text.indexOf("http://www.bidsfight.com/auction?id=") != 0 )
+                else if ( result.text.toLowerCase().indexOf("http://www.bidsfight.com/auction?id=") != 0 )
                 {
                     //message = "QR-Code URL should be in form:\r\n\"http://www.bidsfight.com/auction?id=ХХХХХ\"\r\n where XXXXX should be auction ID number.\r\nPlease use proper QR-Code.";
                     message = 'QR-Code URL should be in form:<br><textarea style="width:90%">http://www.bidsfight.com/auction?id=ХХХХХ</textarea><br/>where XXXXX should be auction ID number.<br/>Please use proper QR-Code.';
@@ -1331,7 +1373,7 @@
         <ons-list modifier="noborder">
             <ons-list-item modifier="longdivider" >
             <div class="center">Internet connection alert</div>
-            <div class="right"><ons-switch id="showConnectionAlert" onchange="showConnectionAlert = this.checked;"></ons-switch></div>
+            <div class="right"><ons-switch id="showConnectionAlert" onchange="showConnectionAlert = this.checked;window.localStorage.setItem('showConnectionAlert', JSON.stringify(showConnectionAlert));"></ons-switch></div>
             </ons-list-item>
         </ons-list>
         </div>
@@ -1438,7 +1480,7 @@
     </p>
   </div>
   <div class="alert-dialog-footer">
-    <button class="alert-dialog-button" onclick="showConnectionAlert = !document.getElementById('dontShowConnectionAlert').checked; hideDialog('dialogConnectionLost')">OK</button>
+    <button class="alert-dialog-button" onclick="showConnectionAlert = !document.getElementById('dontShowConnectionAlert').checked; window.localStorage.setItem('showConnectionAlert', JSON.stringify(showConnectionAlert)); hideDialog('dialogConnectionLost')">OK</button>
   </div>
 </ons-alert-dialog>
 
