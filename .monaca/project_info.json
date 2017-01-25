@@ -10,7 +10,10 @@
         "cordova-plugin-crosswalk-webview": {
             "variables": [
                 "XWALK_VERSION=18.48.477.13"
-            ]
+            ],
+            "additional_params": {
+                "arch": "arm"
+            }
         },
         "cordova-plugin-splashscreen": {
             "variables": []
@@ -40,10 +43,10 @@
         "cordova-universal-links-plugin"
     ],
     "title-ja": "",
-    "title-en": "",
+    "title-en": "BidsFightTest",
     "description-ja": "",
     "description-en": "",
     "category": "User Template",
     "platform": [],
-    "name": "generated-1483968131-584a8c1b803451dc40bfe8cf"
+    "name": "generated-1485024132-584a8c1b803451dc40bfe8cf"
 }

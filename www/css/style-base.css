@@ -48,6 +48,12 @@
   padding: 15px 0px 15px 15px;
 }
 
+.panelCTA {
+    background-color: #fa0; 
+    color: #000;
+    font-weight: 400;
+ }
+ 
 .thumbnail {
   width: 80px;
   height: 80px;

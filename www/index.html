@@ -9,8 +9,9 @@
 
   <link rel="stylesheet" href="components/loader.css">
   <link rel="stylesheet" href="lib/onsenui/css/onsenui.css">
-  <link rel="stylesheet" href="lib/onsenui/css/onsen-css-components.css">
-  <link rel="stylesheet" href="css/style.css">
+  <link id="themeComponents" rel="stylesheet" href="lib/onsenui/css/theme-bidsfight.css">
+  <link rel="stylesheet" href="css/style-base.css">
+  <link id="themeStyle" rel="stylesheet" href="css/style-bidsfight.css">
   <link rel="stylesheet" href="css/animate.css">
 
   <script>
@@ -118,6 +119,38 @@
     }
     //alert("start showConnectionAlert="+showConnectionAlert);
     var showConnectionRestored = false;
+    
+    //загрузка настройки темы пользователя
+    //debugger;
+    var themeName = window.localStorage.getItem("themeName");
+    if ( themeName == null )
+    {
+        themeName = "themeDefault";
+    }
+    else
+    {
+        if ( themeName != "themeDark")
+        {
+            themeName = "themeDefault";
+        }
+    }
+    setTheme();
+    
+    function setTheme()
+    {
+        //подключение темы
+        if ( themeName == "themeDark")
+        {
+            document.getElementById("themeComponents").href = "lib/onsenui/css/theme-bidsfight-dark.css";
+            document.getElementById("themeStyle").href = "css/style-bidsfight-dark.css";
+        }
+        else
+        {
+            document.getElementById("themeComponents").href = "lib/onsenui/css/theme-bidsfight.css";
+            document.getElementById("themeStyle").href = "css/style-bidsfight.css";
+        }
+    }
+
     
     function connectionLost()
     {
@@ -259,6 +292,10 @@
 
       } else if (page.matches('#SettingsNotifications')) {
             document.getElementById('showConnectionAlert').checked = showConnectionAlert;
+            //alert("init settings showConnectionAlert="+showConnectionAlert+" checked="+document.getElementById('showConnectionAlert').checked);
+      
+      } else if (page.matches('#SettingsAppearance')) {
+            document.getElementById(themeName).checked = true;
             //alert("init settings showConnectionAlert="+showConnectionAlert+" checked="+document.getElementById('showConnectionAlert').checked);
       }
     });
@@ -538,10 +575,10 @@
                   </div>
                   <p></p>
                   <div  class="name">
-                    Current bid: <span style="font-weight:800; color:#070">$123</span>
+                    Current bid: <span class="current-bid">$123</span>
                   </div>
                   <div class="name">
-                    Time to left: <span style="font-weight:800; color:#c00">1h 15m</span>
+                    Time to left: <span class="time-left">1h 15m</span>
                   </div>
                 </ons-col>
                 <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
@@ -554,11 +591,11 @@
               <ons-row style="text-align:center">
                   <ons-col width="50%">
                   <div class="location">
-                    <a href="#" onclick="window.open('https://www.google.ru/maps/@48.8582889,2.2927593,17z', '_system')"><i class="fa fa-map-marker"></i> Paris, France</a>
+                    <a class="theme" href="#" onclick="window.open('https://www.google.ru/maps/@48.8582889,2.2927593,17z', '_system')"><i class="fa fa-map-marker"></i> Paris, France</a>
                   </div>
                   </ons-col>
                   <ons-col width="50%">
-                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  <div class="desc"><a class="theme" href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
                   </ons-col>
               </ons-row>
             </ons-list-item>
@@ -575,10 +612,10 @@
                   </div>
                   <p></p>
                   <div  class="name">
-                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                    Current bid: <span class="current-bid">$123</span>
                   </div>
                   <div class="name">
-                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                    Time to left: <span class="time-left">1h 15m</span>
                   </div>
                 </ons-col>
                 <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
@@ -591,11 +628,11 @@
               <ons-row style="text-align:center">
                   <ons-col width="50%">
                   <div class="location">
-                    <a href="#" onclick="window.open('https://www.google.ru/maps/@37.0533978,-110.3478826,11.01z', '_system')"><i class="fa fa-map-marker"></i> Utah, USA</a>
+                    <a class="theme" href="#" onclick="window.open('https://www.google.ru/maps/@37.0533978,-110.3478826,11.01z', '_system')"><i class="fa fa-map-marker"></i> Utah, USA</a>
                   </div>
                   </ons-col>
                   <ons-col width="50%">
-                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  <div class="desc"><a class="theme" href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
                   </ons-col>
               </ons-row>
             </ons-list-item>
@@ -612,10 +649,10 @@
                   </div>
                   <p></p>
                   <div  class="name">
-                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                    Current bid: <span class="current-bid">$123</span>
                   </div>
                   <div class="name">
-                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                    Time to left: <span class="time-left">1h 15m</span>
                   </div>
                 </ons-col>
                 <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
@@ -628,11 +665,11 @@
               <ons-row style="text-align:center">
                   <ons-col width="50%">
                   <div class="location">
-                    <a href="#" onclick="window.open('https://www.google.ru/maps/@35.3605599,138.7255837,12z', '_system')"><i class="fa fa-map-marker"></i> Japan</a>
+                    <a class="theme" href="#" onclick="window.open('https://www.google.ru/maps/@35.3605599,138.7255837,12z', '_system')"><i class="fa fa-map-marker"></i> Japan</a>
                   </div>
                   </ons-col>
                   <ons-col width="50%">
-                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  <div class="desc"><a class="theme" href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
                   </ons-col>
               </ons-row>
             </ons-list-item>
@@ -649,10 +686,10 @@
                   </div>
                   <p></p>
                   <div  class="name">
-                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                    Current bid: <span class="current-bid">$123</span>
                   </div>
                   <div class="name">
-                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                    Time to left: <span class="time-left">1h 15m</span>
                   </div>
                 </ons-col>
                 <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
@@ -665,11 +702,11 @@
               <ons-row style="text-align:center">
                   <ons-col width="50%">
                   <div class="location">
-                    <a href="#" onclick="window.open('https://www.google.ru/maps/@35.6586284,139.7452451,18z', '_system')"><i class="fa fa-map-marker"></i> Tokyo, Japan</a>
+                    <a class="theme" href="#" onclick="window.open('https://www.google.ru/maps/@35.6586284,139.7452451,18z', '_system')"><i class="fa fa-map-marker"></i> Tokyo, Japan</a>
                   </div>
                   </ons-col>
                   <ons-col width="50%">
-                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  <div class="desc"><a class="theme" href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
                   </ons-col>
               </ons-row>
             </ons-list-item>
@@ -684,7 +721,7 @@
 <ons-template id="HomeEarn.html">
     <ons-page id="HomeEarn">
         <ons-bottom-toolbar>
-          <div class="center navigation-bar__center" style="background-color:#fa0">Make more money with <a href="#">Referral Program</a></div>
+          <div class="center navigation-bar__center panelCTA" >Make more money with <a href="#">Referral Program</a></div>
         </ons-bottom-toolbar>
         <div class="content" style="text-align: center">
         <p>List of auctions created by you:</p>
@@ -702,10 +739,10 @@
                   </div>
                   <p></p>
                   <div  class="name">
-                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                    Current bid: <span class="current-bid">$123</span>
                   </div>
                   <div class="name">
-                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                    Time to left: <span class="time-left">1h 15m</span>
                   </div>
                 </ons-col>
                 <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
@@ -718,11 +755,11 @@
               <ons-row style="text-align:center">
                   <ons-col width="50%">
                   <div class="location">
-                    <a href="#" onclick="window.open('https://www.google.ru/maps/@48.8582889,2.2927593,17z', '_system')"><i class="fa fa-map-marker"></i> Paris, France</a>
+                    <a class="theme" href="#" onclick="window.open('https://www.google.ru/maps/@48.8582889,2.2927593,17z', '_system')"><i class="fa fa-map-marker"></i> Paris, France</a>
                   </div>
                   </ons-col>
                   <ons-col width="50%">
-                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  <div class="desc"><a class="theme" href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
                   </ons-col>
               </ons-row>
             </ons-list-item>
@@ -739,10 +776,10 @@
                   </div>
                   <p></p>
                   <div  class="name">
-                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                    Current bid: <span class="current-bid">$123</span>
                   </div>
                   <div class="name">
-                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                    Time to left: <span class="time-left">1h 15m</span>
                   </div>
                 </ons-col>
                 <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
@@ -755,11 +792,11 @@
               <ons-row style="text-align:center">
                   <ons-col width="50%">
                   <div class="location">
-                    <a href="#" onclick="window.open('https://www.google.ru/maps/@37.0533978,-110.3478826,11.01z', '_system')"><i class="fa fa-map-marker"></i> Utah, USA</a>
+                    <a class="theme" href="#" onclick="window.open('https://www.google.ru/maps/@37.0533978,-110.3478826,11.01z', '_system')"><i class="fa fa-map-marker"></i> Utah, USA</a>
                   </div>
                   </ons-col>
                   <ons-col width="50%">
-                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  <div class="desc"><a class="theme" href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
                   </ons-col>
               </ons-row>
             </ons-list-item>
@@ -776,10 +813,10 @@
                   </div>
                   <p></p>
                   <div  class="name">
-                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                    Current bid: <span class="current-bid">$123</span>
                   </div>
                   <div class="name">
-                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                    Time to left: <span class="time-left">1h 15m</span>
                   </div>
                 </ons-col>
                 <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
@@ -792,11 +829,11 @@
               <ons-row style="text-align:center">
                   <ons-col width="50%">
                   <div class="location">
-                    <a href="#" onclick="window.open('https://www.google.ru/maps/@35.3605599,138.7255837,12z', '_system')"><i class="fa fa-map-marker"></i> Japan</a>
+                    <a class="theme" href="#" onclick="window.open('https://www.google.ru/maps/@35.3605599,138.7255837,12z', '_system')"><i class="fa fa-map-marker"></i> Japan</a>
                   </div>
                   </ons-col>
                   <ons-col width="50%">
-                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  <div class="desc"><a class="theme" href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
                   </ons-col>
               </ons-row>
             </ons-list-item>
@@ -813,10 +850,10 @@
                   </div>
                   <p></p>
                   <div  class="name">
-                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                    Current bid: <span class="current-bid">$123</span>
                   </div>
                   <div class="name">
-                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                    Time to left: <span class="time-left">1h 15m</span>
                   </div>
                 </ons-col>
                 <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
@@ -829,11 +866,11 @@
               <ons-row style="text-align:center">
                   <ons-col width="50%">
                   <div class="location">
-                    <a href="#" onclick="window.open('https://www.google.ru/maps/@35.6586284,139.7452451,18z', '_system')"><i class="fa fa-map-marker"></i> Tokyo, Japan</a>
+                    <a class="theme" href="#" onclick="window.open('https://www.google.ru/maps/@35.6586284,139.7452451,18z', '_system')"><i class="fa fa-map-marker"></i> Tokyo, Japan</a>
                   </div>
                   </ons-col>
                   <ons-col width="50%">
-                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  <div class="desc"><a class="theme" href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
                   </ons-col>
               </ons-row>
             </ons-list-item>
@@ -970,10 +1007,10 @@
                   </div>
                   <p></p>
                   <div  class="name">
-                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                    Current bid: <span class="current-bid">$123</span>
                   </div>
                   <div class="name">
-                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                    Time to left: <span class="time-left">1h 15m</span>
                   </div>
                 </ons-col>
                 <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
@@ -986,11 +1023,11 @@
               <ons-row style="text-align:center">
                   <ons-col width="50%">
                   <div class="location">
-                    <a href="#" onclick="window.open('https://www.google.ru/maps/@48.8582889,2.2927593,17z', '_system')"><i class="fa fa-map-marker"></i> Paris, France</a>
+                    <a class="theme" href="#" onclick="window.open('https://www.google.ru/maps/@48.8582889,2.2927593,17z', '_system')"><i class="fa fa-map-marker"></i> Paris, France</a>
                   </div>
                   </ons-col>
                   <ons-col width="50%">
-                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  <div class="desc"><a class="theme" href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
                   </ons-col>
               </ons-row>
             </ons-list-item>
@@ -1007,10 +1044,10 @@
                   </div>
                   <p></p>
                   <div  class="name">
-                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                    Current bid: <span class="current-bid">$123</span>
                   </div>
                   <div class="name">
-                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                    Time to left: <span class="time-left">1h 15m</span>
                   </div>
                 </ons-col>
                 <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
@@ -1023,11 +1060,11 @@
               <ons-row style="text-align:center">
                   <ons-col width="50%">
                   <div class="location">
-                    <a href="#" onclick="window.open('https://www.google.ru/maps/@37.0533978,-110.3478826,11.01z', '_system')"><i class="fa fa-map-marker"></i> Utah, USA</a>
+                    <a class="theme" href="#" onclick="window.open('https://www.google.ru/maps/@37.0533978,-110.3478826,11.01z', '_system')"><i class="fa fa-map-marker"></i> Utah, USA</a>
                   </div>
                   </ons-col>
                   <ons-col width="50%">
-                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  <div class="desc"><a class="theme" href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
                   </ons-col>
               </ons-row>
             </ons-list-item>
@@ -1044,10 +1081,10 @@
                   </div>
                   <p></p>
                   <div  class="name">
-                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                    Current bid: <span class="current-bid">$123</span>
                   </div>
                   <div class="name">
-                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                    Time to left: <span class="time-left">1h 15m</span>
                   </div>
                 </ons-col>
                 <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
@@ -1060,11 +1097,11 @@
               <ons-row style="text-align:center">
                   <ons-col width="50%">
                   <div class="location">
-                    <a href="#" onclick="window.open('https://www.google.ru/maps/@35.3605599,138.7255837,12z', '_system')"><i class="fa fa-map-marker"></i> Japan</a>
+                    <a class="theme" href="#" onclick="window.open('https://www.google.ru/maps/@35.3605599,138.7255837,12z', '_system')"><i class="fa fa-map-marker"></i> Japan</a>
                   </div>
                   </ons-col>
                   <ons-col width="50%">
-                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  <div class="desc"><a class="theme" href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
                   </ons-col>
               </ons-row>
             </ons-list-item>
@@ -1081,10 +1118,10 @@
                   </div>
                   <p></p>
                   <div  class="name">
-                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                    Current bid: <span class="current-bid">$123</span>
                   </div>
                   <div class="name">
-                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                    Time to left: <span class="time-left">1h 15m</span>
                   </div>
                 </ons-col>
                 <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
@@ -1097,11 +1134,11 @@
               <ons-row style="text-align:center">
                   <ons-col width="50%">
                   <div class="location">
-                    <a href="#" onclick="window.open('https://www.google.ru/maps/@35.6586284,139.7452451,18z', '_system')"><i class="fa fa-map-marker"></i> Tokyo, Japan</a>
+                    <a class="theme" href="#" onclick="window.open('https://www.google.ru/maps/@35.6586284,139.7452451,18z', '_system')"><i class="fa fa-map-marker"></i> Tokyo, Japan</a>
                   </div>
                   </ons-col>
                   <ons-col width="50%">
-                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  <div class="desc"><a class="theme" href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
                   </ons-col>
               </ons-row>
             </ons-list-item>
@@ -1128,7 +1165,8 @@
                 <ons-toolbar-button onclick="showMenuMore(this)"><ons-icon icon="fa-ellipsis-v"></ons-icon></ons-toolbar-button>
             </div>
         </ons-toolbar>
-        <div modifier="material" class="navigation-bar navigation-bar--material">
+        <!--<div modifier="material" class="navigation-bar navigation-bar--material">-->
+        <div  modifier="material" class="navigation-bar navigation-bar--material">
           <!--<div class="left">
             Only active <ons-switch checked></ons-switch>
           </div>-->
@@ -1156,10 +1194,10 @@
                   </div>
                   <p></p>
                   <div  class="name">
-                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                    Current bid: <span class="current-bid">$123</span>
                   </div>
                   <div class="name">
-                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                    Time to left: <span class="time-left">1h 15m</span>
                   </div>
                 </ons-col>
                 <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
@@ -1172,11 +1210,11 @@
               <ons-row style="text-align:center">
                   <ons-col width="50%">
                   <div class="location">
-                    <a href="#" onclick="window.open('https://www.google.ru/maps/@48.8582889,2.2927593,17z', '_system')"><i class="fa fa-map-marker"></i> Paris, France</a>
+                    <a class="theme" href="#" onclick="window.open('https://www.google.ru/maps/@48.8582889,2.2927593,17z', '_system')"><i class="fa fa-map-marker"></i> Paris, France</a>
                   </div>
                   </ons-col>
                   <ons-col width="50%">
-                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  <div class="desc"><a class="theme" href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
                   </ons-col>
               </ons-row>
             </ons-list-item>
@@ -1193,10 +1231,10 @@
                   </div>
                   <p></p>
                   <div  class="name">
-                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                    Current bid: <span class="current-bid">$123</span>
                   </div>
                   <div class="name">
-                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                    Time to left: <span class="time-left">1h 15m</span>
                   </div>
                 </ons-col>
                 <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
@@ -1209,11 +1247,11 @@
               <ons-row style="text-align:center">
                   <ons-col width="50%">
                   <div class="location">
-                    <a href="#" onclick="window.open('https://www.google.ru/maps/@37.0533978,-110.3478826,11.01z', '_system')"><i class="fa fa-map-marker"></i> Utah, USA</a>
+                    <a class="theme" href="#" onclick="window.open('https://www.google.ru/maps/@37.0533978,-110.3478826,11.01z', '_system')"><i class="fa fa-map-marker"></i> Utah, USA</a>
                   </div>
                   </ons-col>
                   <ons-col width="50%">
-                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  <div class="desc"><a class="theme" href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
                   </ons-col>
               </ons-row>
             </ons-list-item>
@@ -1230,10 +1268,10 @@
                   </div>
                   <p></p>
                   <div  class="name">
-                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                    Current bid: <span class="current-bid">$123</span>
                   </div>
                   <div class="name">
-                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                    Time to left: <span class="time-left">1h 15m</span>
                   </div>
                 </ons-col>
                 <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
@@ -1246,11 +1284,11 @@
               <ons-row style="text-align:center">
                   <ons-col width="50%">
                   <div class="location">
-                    <a href="#" onclick="window.open('https://www.google.ru/maps/@35.3605599,138.7255837,12z', '_system')"><i class="fa fa-map-marker"></i> Japan</a>
+                    <a class="theme" href="#" onclick="window.open('https://www.google.ru/maps/@35.3605599,138.7255837,12z', '_system')"><i class="fa fa-map-marker"></i> Japan</a>
                   </div>
                   </ons-col>
                   <ons-col width="50%">
-                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  <div class="desc"><a class="theme" href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
                   </ons-col>
               </ons-row>
             </ons-list-item>
@@ -1267,10 +1305,10 @@
                   </div>
                   <p></p>
                   <div  class="name">
-                    Current bid: <span style="font-weight:800; color:#4c4">$123</span>
+                    Current bid: <span class="current-bid">$123</span>
                   </div>
                   <div class="name">
-                    Time to left: <span style="font-weight:800; color:#c44">1h 15m</span>
+                    Time to left: <span class="time-left">1h 15m</span>
                   </div>
                 </ons-col>
                 <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showMenuAuction(this)"></ons-icon></ons-col>
@@ -1283,11 +1321,11 @@
               <ons-row style="text-align:center">
                   <ons-col width="50%">
                   <div class="location">
-                    <a href="#" onclick="window.open('https://www.google.ru/maps/@35.6586284,139.7452451,18z', '_system')"><i class="fa fa-map-marker"></i> Tokyo, Japan</a>
+                    <a class="theme" href="#" onclick="window.open('https://www.google.ru/maps/@35.6586284,139.7452451,18z', '_system')"><i class="fa fa-map-marker"></i> Tokyo, Japan</a>
                   </div>
                   </ons-col>
                   <ons-col width="50%">
-                  <div class="desc"><a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  <div class="desc"><a class="theme" href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
                   </ons-col>
               </ons-row>
             </ons-list-item>
@@ -1331,7 +1369,7 @@
             <div class="center">Notifications</div>
             <div class="right"><ons-icon icon="fa-chevron-right" class="list__item__icon"></ons-icon></div>
             </ons-list-item>
-            <ons-list-item tappable modifier="longdivider" >
+            <ons-list-item tappable modifier="longdivider" onclick="fn.load('SettingsAppearance.html')">
             <div class="left"><ons-icon icon="fa-picture-o" class="list__item__icon"></ons-icon></div>
             <div class="center">Appearance</div>
             <div class="right"><ons-icon icon="fa-chevron-right" class="list__item__icon"></ons-icon></div>
@@ -1349,7 +1387,7 @@
         </ons-list>
         </div>
               <hr />
-        <p style="text-align: center; margin: 16px">If you want to propose any additional settings - <a href="#">let us know!</a></p>
+        <p style="text-align: center; margin: 16px">If you want to propose any additional settings - <a class="theme" href="#">let us know!</a></p>
         
     </ons-page>
 </ons-template>
@@ -1377,7 +1415,45 @@
             </ons-list-item>
         </ons-list>
         </div>
+    </ons-page>
+</ons-template>
+
+<ons-template id="SettingsAppearance.html">
+    <ons-page id="SettingsAppearance">
+        <ons-toolbar>
+            <div class="left"><ons-back-button>Back</ons-back-button></div>
+            <div class="center">
+                Appearance
+            </div>
+            <div class="right">
+                <ons-toolbar-button onclick="document.getElementById('navigator').resetToPage('Home.html')"><ons-icon icon="fa-home"></ons-icon></ons-toolbar-button>
+                <ons-toolbar-button><div class="notification events-notification">12</div><ons-icon icon="fa-bell"></ons-icon></ons-toolbar-button>
+                <ons-toolbar-button onclick="showMenuMore(this)"><ons-icon icon="fa-ellipsis-v"></ons-icon></ons-toolbar-button>
+            </div>
+        </ons-toolbar>
         
+        <p style="text-align: center; margin: 16px">Here you can change the settings for appearance:</p>
+              <hr />
+        <ons-list modifier="noborder">
+            <ons-list-item modifier="nodivider">Visual theme:</ons-list-item>
+            <ons-list-item tappable modifier="nodivider">
+              <label class="left">
+                <ons-input name="themeName" type="radio" input-id="themeDefault" checked onchange="themeName = 'themeDefault';window.localStorage.setItem('themeName', themeName);setTheme();"></ons-input>
+              </label>
+              <label for="themeDefault" class="center">
+                Default
+              </label>
+            </ons-list-item>
+            <ons-list-item tappable modifier="nodivider">
+              <label class="left">
+                <ons-input name="themeName" type="radio" input-id="themeDark" onchange="themeName = 'themeDark';window.localStorage.setItem('themeName', themeName);setTheme();"></ons-input>
+              </label>
+              <label for="themeDark" class="center">
+                Dark
+              </label>
+            </ons-list-item>
+        </ons-list>
+        </div>
     </ons-page>
 </ons-template>
 
@@ -1475,7 +1551,7 @@
     <p>
     <!--<ons-row vertical-align="center" >-->
         <ons-input type="checkbox" input-id="dontShowConnectionAlert" onchange="document.getElementById('dialogConnectionLost').cancelable = false;"></ons-input>
-        <ons-input><label for="dontShowConnectionAlert" >Don't show again</label></ons-input>
+        <label for="dontShowConnectionAlert" >Don't show again</label>
     <!--</ons-row>-->
     </p>
   </div>

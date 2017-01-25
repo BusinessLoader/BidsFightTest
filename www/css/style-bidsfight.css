@@ -1,0 +1,19 @@
+/**/
+/*@import url("style-base.css");*/
+
+hr {
+   border-top: 1px solid #aaaaaa;
+   border-bottom: 1px solid #d11;
+   color: #d11;
+   background-color: #d11;
+}
+
+.current-bid {
+    font-weight: 800;
+    color: #070;
+}
+
+.time-left {
+    font-weight: 800;
+    color: #c00;
+}
