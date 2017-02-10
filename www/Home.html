@@ -1,0 +1,20 @@
+    <ons-page id="Home">
+        <ons-toolbar>
+            <div class="left">
+                <ons-toolbar-button onclick="fn.openMenuMain()"><ons-icon icon="fa-bars"></ons-icon></ons-toolbar-button>
+            </div>
+            <div class="center">
+                Auctions
+            </div>
+            <div class="right">
+                <ons-toolbar-button onclick="document.getElementById('navigator').pushPage('Search.html')"><ons-icon icon="fa-search"></ons-icon></ons-toolbar-button>
+                <ons-toolbar-button><ons-icon icon="fa-plus"></ons-icon></ons-toolbar-button>
+                <ons-toolbar-button><div class="notification events-notification ">12</div><ons-icon icon="fa-bell"></ons-icon></ons-toolbar-button>
+            </div>
+        </ons-toolbar>
+        <ons-tabbar position="top" animation="slide">
+            <ons-tab icon="fa-gavel" label="Bids" page="HomeBids.html" active></ons-tab>
+            <ons-tab icon="fa-eye" label="Watch" page="HomeWatch.html"></ons-tab>
+            <ons-tab icon="fa-money" label="Earn" page="HomeEarn.html"></ons-tab>
+        </ons-tabbar>
+    </ons-page>

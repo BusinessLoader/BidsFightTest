@@ -1,0 +1,17 @@
+    <ons-alert-dialog id="dialogConnectionLost" cancelable >
+      <div class="alert-dialog-title"><ons-icon icon="fa-exclamation-triangle" style="color: #fa0" size="20px"></ons-icon> WARNING</div>
+      <div class="alert-dialog-content">
+        <p>Internet connection is lost!</p>
+        <p>Please make sure that you can control your auctions in another way!</p>
+        <p style="text-align:center"><img src="images/no_plug.png"/></p>
+        <p>
+        <!--<ons-row vertical-align="center" >-->
+            <ons-input type="checkbox" input-id="dontShowConnectionAlert" onchange="document.getElementById('dialogConnectionLost').cancelable = false;"></ons-input>
+            <label for="dontShowConnectionAlert" >Don't show again</label>
+        <!--</ons-row>-->
+        </p>
+      </div>
+      <div class="alert-dialog-footer">
+        <button class="alert-dialog-button" onclick="showConnectionAlert = !document.getElementById('dontShowConnectionAlert').checked; window.localStorage.setItem('showConnectionAlert', JSON.stringify(showConnectionAlert)); hideDialog('dialogConnectionLost')">OK</button>
+      </div>
+    </ons-alert-dialog>

@@ -1,0 +1,50 @@
+    <ons-page id="Settings">
+        <ons-toolbar>
+            <div class="left"><ons-back-button>Back</ons-back-button></div>
+            <div class="center">
+                Settings
+            </div>
+            <div class="right">
+                <ons-toolbar-button onclick="showPopover('menuMore',this)"><ons-icon icon="fa-ellipsis-v"></ons-icon></ons-toolbar-button>
+            </div>
+        </ons-toolbar>
+        
+        <p style="text-align: center; margin: 16px">Here you can change the settings to more useful for you:</p>
+              <hr />
+        <ons-list modifier="noborder">
+            <ons-list-item tappable modifier="longdivider" >
+            <div class="left"><ons-icon icon="fa-cog" class="list__item__icon"></ons-icon></div>
+            <div class="center">General</div>
+            <div class="right"><ons-icon icon="fa-chevron-right" class="list__item__icon"></ons-icon></div>
+            </ons-list-item>
+            <ons-list-item tappable modifier="longdivider" >
+            <div class="left"><ons-icon icon="fa-user" class="list__item__icon"></ons-icon></div>
+            <div class="center">Profile</div>
+            <div class="right"><ons-icon icon="fa-chevron-right" class="list__item__icon"></ons-icon></div>
+            </ons-list-item>
+            <ons-list-item tappable modifier="longdivider" onclick="fn.load('SettingsNotifications.html')">
+            <div class="left"><ons-icon icon="fa-bell" class="list__item__icon"></ons-icon></div>
+            <div class="center">Notifications</div>
+            <div class="right"><ons-icon icon="fa-chevron-right" class="list__item__icon"></ons-icon></div>
+            </ons-list-item>
+            <ons-list-item tappable modifier="longdivider" onclick="fn.load('SettingsAppearance.html')">
+            <div class="left"><ons-icon icon="fa-picture-o" class="list__item__icon"></ons-icon></div>
+            <div class="center">Appearance</div>
+            <div class="right"><ons-icon icon="fa-chevron-right" class="list__item__icon"></ons-icon></div>
+            </ons-list-item>
+            <ons-list-item tappable modifier="longdivider" >
+            <div class="left"><ons-icon icon="fa-money" class="list__item__icon"></ons-icon></div>
+            <div class="center">Payments</div>
+            <div class="right"><ons-icon icon="fa-chevron-right" class="list__item__icon"></ons-icon></div>
+            </ons-list-item>
+            <ons-list-item tappable modifier="longdivider" >
+            <div class="left"><ons-icon icon="fa-cogs" class="list__item__icon"></ons-icon></div>
+            <div class="center">Advanced</div>
+            <div class="right"><ons-icon icon="fa-chevron-right" class="list__item__icon"></ons-icon></div>
+            </ons-list-item>
+        </ons-list>
+        </div>
+              <hr />
+        <p style="text-align: center; margin: 16px">If you want to propose any additional settings - <a class="theme" href="#">let us know!</a></p>
+        
+    </ons-page>

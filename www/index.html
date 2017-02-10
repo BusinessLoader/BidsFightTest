@@ -167,7 +167,7 @@
                 navigator.notification.beep(1);
                 navigator.vibrate(1000);
                 //ons.notification.alert({messageHTML:"<p>Internet connection is lost!</p>Please make sure that you can control your auctions in another way!", title:"ERROR", cancelable:true});
-                showDialog('dialogConnectionLost');
+                showAlertDialog('dialogConnectionLost');
             }
             //иначе тихо показать всплывающий и исчезающий toast
             else
@@ -272,17 +272,7 @@
     document.addEventListener('init', function(event) {
       var page = event.target;
 
-      if (page.matches('#tab1')) {
-        page.querySelector('#push-button').onclick = function() {
-          document.querySelector('#navigator').pushPage('page2.html');
-        };
-        
-      } else if (page.matches('#second-page')) {
-        page.querySelector('#pop-button').onclick = function() {
-          document.querySelector('#navigator').popPage();
-        };
-
-      } else if (page.matches('#Search')) {
+      if (page.matches('#Search')) {
         //if ( page.data.activeTab != undefined )
         //{
             //document.getElementById('SearchTabbar').setActiveTab(page.data.activeTab);
@@ -301,19 +291,31 @@
     });
     
     /*ons.createPopover('menuMore.html');
-    ons.createPopover('popupFilterHistory.html');
     ons.createPopover('menuAuction.html');*/
     
-    function showMenuAuction(target)
+    /*function showMenuAuction(target)
     {
         ons.createPopover('menuAuction.html').then(function(popover){popover.show(target);})
-    }
+    }*/
     
-    function showMenuMore(target)
+    /*function showMenuMore(target)
     {
-        ons.createPopover('menuMore.html').then(function(popover){popover.show(target);})
+        ons.createPopover('menuMore.html').then(function(popover){popover.show(target);});
+    }*/
+
+    function showPopover(id, target)
+    {
+        var popover = document.getElementById(id);
+        if ( popover )
+        {
+            popover.show(target);
+        }
+        else
+        {
+            ons.createPopover(id+'.html').then(function(popover){popover.show(target);});
+        }
     }
-    
+
     function scanBarcode( )
     {
         //window.plugins.barcodeScanner.scan(
@@ -389,10 +391,29 @@
 
     }
     
-    var showDialog = function(id) {
-      document
+    var showAlertDialog = function(id) {
+      /*document
         .getElementById(id)
-        .show();
+        .show();*/
+        
+        var dialog = document.getElementById(id);
+        
+        if (dialog)
+        {
+            dialog.show();
+        }
+        else
+        {
+            ons
+            .createAlertDialog(id+'.html')
+            .then
+            (
+                function(dialog)
+                {
+                    dialog.show();
+                }
+            );
+        }
     };
     
     var hideDialog = function(id) {
@@ -403,21 +424,12 @@
 
     function ClearHistory()
     {
-        showDialog('dialogConfirmClearHistory');
-        /*ons
-            .notification.confirm(, {title:"Clear history", cancelable:true})
-            .then(function(button)
-            {
-                if ( button == 1 )
-                {
-                    //alert("clear");
-                }
-            });*/
+        showAlertDialog('dialogConfirmClearHistory');        
     }
 
     function FilterHistory()
     {
-        showDialog('dialogFilterHistory');
+        showAlertDialog('dialogFilterHistory');
     }
 
     
@@ -426,7 +438,8 @@
 <body>
 
 <ons-splitter>
-  <ons-splitter-side id="menuMain" side="left" width="250px" swipe-target-width="100px" collapse swipeable>
+  <ons-splitter-side id="menuMain" page="menuMainSlide.html" side="left" width="250px" swipe-target-width="100px" collapse swipeable>
+    <!--
     <ons-page>
       <ons-list>
         <ons-list-header>Win auction</ons-list-header>
@@ -509,6 +522,7 @@
         </ons-list-item>
       </ons-list>
     </ons-page>
+    -->
   </ons-splitter-side>
   <ons-splitter-content>
     <ons-navigator id="navigator" page="Home.html" animation="slide"></ons-navigator>
@@ -516,10 +530,9 @@
 </ons-splitter>
 
 
-  <!--<ons-navigator id="navigator" page="home.html" animation="slide"></ons-navigator>-->
-
+<!--
 <ons-template id="Home.html">
-    <ons-page>
+    <ons-page id="Home">
         <ons-toolbar>
             <div class="left">
                 <ons-toolbar-button onclick="fn.openMenuMain()"><ons-icon icon="fa-bars"></ons-icon></ons-toolbar-button>
@@ -540,7 +553,9 @@
         </ons-tabbar>
     </ons-page>
 </ons-template>
+-->
 
+<!--
 <ons-template id="HomeBids.html">
   <ons-page id="HomeBids">
       <div class="content" style="text-align: center">
@@ -550,13 +565,14 @@
         <p>Be the first. Get more!</p>
         <ons-if orientation="portrait"><p>&nbspVERTICAL ORIENTATION</p></ons-if>
         <ons-button id="push-button" class="buttonCTA animated pulse animatedBtn" onclick="alert('isPortrait = '+ ons.orientation.isPortrait());document.getElementById('navigator').pushPage('Search.html')">
-            <!--<ons-icon icon="fa-search"></ons-icon>-->
             Find and win!
         </ons-button>
       </div>
   </ons-page>
 </ons-template>
+-->
 
+<!--
 <ons-template id="HomeWatch.html">
     <ons-page id="HomeWatch">
         <div class="content" style="text-align: center">
@@ -717,7 +733,9 @@
         </div>
     </ons-page>
 </ons-template>
+-->
 
+<!--
 <ons-template id="HomeEarn.html">
     <ons-page id="HomeEarn">
         <ons-bottom-toolbar>
@@ -881,17 +899,15 @@
         </div>
     </ons-page>
 </ons-template>
+-->
 
-
+<!--
 <ons-template id="tab1.html">
   <ons-page id="tab1">
     <ons-bottom-toolbar>
       <div class="center">Tab 1 toolbar</div>
     </ons-bottom-toolbar>
 
-    <!--<p style="text-align: center;">
-      This is the first page.
-    </p>-->
     
       <div class="content" style="text-align: center">
         <p>This is the Tab 1 on first page.</p>
@@ -926,8 +942,9 @@
       </div>
     </ons-page>
   </ons-template>
-  
+-->
 
+<!--
 <ons-template id="Auction.html">
     <ons-page id="Auction">
         <ons-toolbar>
@@ -946,8 +963,9 @@
         </div>
     </ons-page>
 </ons-template>
-  
+-->
 
+<!--
 <ons-template id="Search.html">
     <ons-page id="Search">
         <ons-toolbar>
@@ -968,13 +986,14 @@
         </ons-tabbar>
     </ons-page>
 </ons-template>
+-->
 
+<!--
 <ons-template id="SearchSimple.html">
   <ons-page id="SearchSimple">
       <div class="content" style="text-align: center">
         <p>Please type auction's ID, part of title or description and press 'Find!':</p>
         <p><input type="search" class="search-input" style="width: 75%; margin: 6px auto 6px auto;" placeholder="Search" autofocus="true"></input></p>
-        <!--<p><ons-input type="search"  style="width: 75%; margin: 6px auto 6px auto;" placeholder="Search" autofocus="true"></ons-input></p>-->
         <ons-button id="push-button" onclick="">
             <ons-icon icon="fa-search"></ons-icon>
             Find!
@@ -988,7 +1007,9 @@
       </div>
   </ons-page>
 </ons-template>
+-->
 
+<!--
 <ons-template id="SearchResults.html">
     <ons-page id="SearchResults">
         <div class="content" style="text-align: center">
@@ -1149,8 +1170,9 @@
         </div>
     </ons-page>
 </ons-template>
+-->
 
-
+<!--
 <ons-template id="History.html">
     <ons-page id="History">
         <ons-toolbar>
@@ -1161,24 +1183,17 @@
             <div class="right">
                 <ons-toolbar-button onclick="FilterHistory()"><ons-icon icon="fa-filter"></ons-icon></ons-toolbar-button>
                 <ons-toolbar-button onclick="ClearHistory()"><ons-icon icon="fa-eraser"></ons-icon></ons-toolbar-button>
-                <!--<ons-toolbar-button><div class="notification events-notification">12</div><ons-icon icon="fa-bell"></ons-icon></ons-toolbar-button>-->
                 <ons-toolbar-button onclick="showMenuMore(this)"><ons-icon icon="fa-ellipsis-v"></ons-icon></ons-toolbar-button>
             </div>
         </ons-toolbar>
-        <!--<div modifier="material" class="navigation-bar navigation-bar--material">-->
         <div  modifier="material" class="navigation-bar navigation-bar--material">
-          <!--<div class="left">
-            Only active <ons-switch checked></ons-switch>
-          </div>-->
           <div class="navigation-bar--material__center"  style="vertical-align: middle;">
     
             <input type="search" class="search-input" style="width: 100%; margin: 6px auto 6px auto;display: inline-block;vertical-align: middle;" placeholder="Search">
-            <!--<ons-toolbar-button style="vertical-align: middle;"><ons-icon icon="fa-bell"></ons-icon></ons-toolbar-button>-->
 
           </div>
         </div>
         
-        <!--<div class="content" style="text-align: center">-->
         <p style="text-align: center">Previously viewed auctions:</p>
               <hr />
         <ons-list modifier="noborder">
@@ -1331,11 +1346,11 @@
             </ons-list-item>
               <hr />
         </ons-list>
-        <!--</div>-->
     </ons-page>
 </ons-template>
+-->
 
-
+<!--
 <ons-template id="Settings.html">
     <ons-page id="Settings">
         <ons-toolbar>
@@ -1344,9 +1359,6 @@
                 Settings
             </div>
             <div class="right">
-                <!--<ons-toolbar-button onclick="FilterHistory()"><ons-icon icon="fa-filter"></ons-icon></ons-toolbar-button>-->
-                <!--<ons-toolbar-button onclick="ClearHistory()"><ons-icon icon="fa-eraser"></ons-icon></ons-toolbar-button>-->
-                <!--<ons-toolbar-button><div class="notification events-notification">12</div><ons-icon icon="fa-bell"></ons-icon></ons-toolbar-button>-->
                 <ons-toolbar-button onclick="showMenuMore(this)"><ons-icon icon="fa-ellipsis-v"></ons-icon></ons-toolbar-button>
             </div>
         </ons-toolbar>
@@ -1391,7 +1403,9 @@
         
     </ons-page>
 </ons-template>
+-->
 
+<!--
 <ons-template id="SettingsNotifications.html">
     <ons-page id="SettingsNotifications">
         <ons-toolbar>
@@ -1417,7 +1431,9 @@
         </div>
     </ons-page>
 </ons-template>
+-->
 
+<!--
 <ons-template id="SettingsAppearance.html">
     <ons-page id="SettingsAppearance">
         <ons-toolbar>
@@ -1456,238 +1472,191 @@
         </div>
     </ons-page>
 </ons-template>
-
-<ons-alert-dialog id="dialogConfirmClearHistory" cancelable >
-  <div class="alert-dialog-title">Clear history</div>
-  <div class="alert-dialog-content">
-    <p>Do you want clear history of previously viewed auctions?</p>
-  <ons-list>
-    <!--<ons-list-header>Clear auctions:</ons-list-header>-->
-    <ons-list-item tappable>
-      <label class="left">
-        <ons-input name="clear" type="radio" input-id="clearAll" checked></ons-input>
-      </label>
-      <label for="clearAll" class="center">
-        All auctions
-      </label>
-    </ons-list-item>
-    <ons-list-item tappable>
-      <label class="left">
-        <ons-input name="clear" type="radio" input-id="clearClosed"></ons-input>
-      </label>
-      <label for="clearClosed" class="center">
-        Closed only
-      </label>
-    </ons-list-item>
-  </ons-list>
-  </div>
-  <div class="alert-dialog-footer">
-    <button class="alert-dialog-button" onclick="hideDialog('dialogConfirmClearHistory')">Cancel</button>
-    <button class="alert-dialog-button" onclick="hideDialog('dialogConfirmClearHistory')">OK</button>
-  </div>
-</ons-alert-dialog>
-
-
-<ons-alert-dialog id="dialogFilterHistory" cancelable >
-  <div class="alert-dialog-title">History filters</div>
-  <div class="alert-dialog-content">
-    <ons-list>
-        <ons-list-item >
-          <div class="center">
-            Only active auctions
-          </div>
-          <div class="right">
-            <ons-switch></ons-switch>
-          </div>
-        </ons-list-item>
-        
-        <ons-list-header>Viewed:</ons-list-header>
-        <ons-list-item tappable>
-            <label class="right">
-                <ons-input name="HistoryDates" type="radio" input-id="HistoryToday"></ons-input>
-            </label>
-            <label for="HistoryToday" class="center">
-                Today
-            </label>
-        </ons-list-item>
-        <ons-list-item tappable>
-            <label class="right">
-                <ons-input name="HistoryDates" type="radio" input-id="History7Days"></ons-input>
-            </label>
-            <label for="History7Days" class="center">
-                Last 7 days
-            </label>
-        </ons-list-item>
-        <ons-list-item tappable>
-            <label class="right">
-                <ons-input name="HistoryDates" type="radio" input-id="History30Days"></ons-input>
-            </label>
-            <label for="History30Days" class="center">
-                Last 30 days
-            </label>
-        </ons-list-item>
-        <ons-list-item tappable>
-            <label class="right">
-                <ons-input name="HistoryDates" type="radio" input-id="HistoryAllTime" checked></ons-input>
-            </label>
-            <label for="HistoryAllTime" class="center">
-                All time
-            </label>
-        </ons-list-item>
-    </ons-list>
-  </div>
-  <div class="alert-dialog-footer">
-    <button class="alert-dialog-button" onclick="hideDialog('dialogFilterHistory')">Cancel</button>
-    <button class="alert-dialog-button" onclick="hideDialog('dialogFilterHistory')">OK</button>
-  </div>
-</ons-alert-dialog>
-
-<ons-alert-dialog id="dialogConnectionLost" cancelable >
-  <div class="alert-dialog-title"><ons-icon icon="fa-exclamation-triangle" style="color: #fa0" size="20px"></ons-icon> WARNING</div>
-  <div class="alert-dialog-content">
-    <p>Internet connection is lost!</p>
-    <p>Please make sure that you can control your auctions in another way!</p>
-    <p style="text-align:center"><img src="images/no_plug.png"/></p>
-    <p>
-    <!--<ons-row vertical-align="center" >-->
-        <ons-input type="checkbox" input-id="dontShowConnectionAlert" onchange="document.getElementById('dialogConnectionLost').cancelable = false;"></ons-input>
-        <label for="dontShowConnectionAlert" >Don't show again</label>
-    <!--</ons-row>-->
-    </p>
-  </div>
-  <div class="alert-dialog-footer">
-    <button class="alert-dialog-button" onclick="showConnectionAlert = !document.getElementById('dontShowConnectionAlert').checked; window.localStorage.setItem('showConnectionAlert', JSON.stringify(showConnectionAlert)); hideDialog('dialogConnectionLost')">OK</button>
-  </div>
-</ons-alert-dialog>
-
-
-<ons-template id="menuMore.html">
-<ons-popover direction="down" cancelable cover-target id="menuMore">
-    <ons-list>
-        <ons-list-item tappable>
-          <div class="left">
-            <ons-icon icon="fa-search" class="list__item__icon" fixed-width="true"></ons-icon>
-          </div>
-          <div class="center">
-            Find and win
-          </div>
-        </ons-list-item>
-        <ons-list-item tappable>
-          <div class="left">
-            <ons-icon icon="fa-plus" class="list__item__icon" fixed-width="true"></ons-icon>
-          </div>
-          <div class="center">
-            Create and earn
-          </div>
-        </ons-list-item>
-        <ons-list-item tappable>
-          <div class="left">
-            <ons-icon icon="fa-question" class="list__item__icon" fixed-width="true"></ons-icon>
-          </div>
-          <div class="center">
-            Help
-          </div>
-        </ons-list-item>
-    </ons-list>
-    <div style="padding: 10px; text-align: center;">
-            <ons-button modifier="outline" onclick="document.getElementById('menuMore').hide()">Cancel</ons-button>
-    </div>
-</ons-popover>
-</ons-template>  
-
-
-<ons-template id="menuAuction.html">
-<ons-popover direction="down" cancelable cover-target id="menuAuction">
-    <ons-list>
-        <ons-list-item tappable>
-          <div class="left">
-            <ons-icon icon="fa-info" class="list__item__icon" fixed-width="true"></ons-icon>
-          </div>
-          <div class="center">
-            Details
-          </div>
-        </ons-list-item>
-        <ons-list-item tappable>
-          <div class="left">
-            <ons-icon icon="fa-gavel" class="list__item__icon" fixed-width="true"></ons-icon>
-          </div>
-          <div class="center">
-            Make a bid
-          </div>
-        </ons-list-item>
-        <ons-list-item tappable>
-          <div class="left">
-            <ons-icon icon="fa-eye" class="list__item__icon" fixed-width="true"></ons-icon>
-          </div>
-          <div class="center">
-            Watch
-          </div>
-        </ons-list-item>
-    </ons-list>
-    <div style="padding: 10px; text-align: center;">
-            <ons-button modifier="outline" onclick="document.getElementById('menuAuction').hide()">Cancel</ons-button>
-    </div>
-</ons-popover>
-</ons-template>  
+-->
 
 <!--
-<ons-template id="popupFilterHistory.html">
-<ons-popover direction="down" id="popupFilterHistory">
-    <div style="padding: 10px;" class="alert-dialog-title alert-dialog-title--material">
-        History filters
-    </div>
-    <ons-list>
-        <ons-list-item >
-          <div class="center">
-            Only active auctions
-          </div>
-          <div class="right">
-            <ons-switch></ons-switch>
-          </div>
-        </ons-list-item>
-        
-        <ons-list-header>Viewed:</ons-list-header>
+<ons-template id="dialogConfirmClearHistory.html">
+    <ons-alert-dialog id="dialogConfirmClearHistory" cancelable >
+      <div class="alert-dialog-title">Clear history</div>
+      <div class="alert-dialog-content">
+        <p>Do you want clear history of previously viewed auctions?</p>
+      <ons-list>
         <ons-list-item tappable>
-            <label class="right">
-                <ons-input name="HistoryDates" type="radio" input-id="HistoryToday"></ons-input>
-            </label>
-            <label for="HistoryToday" class="center">
-                Today
-            </label>
+          <label class="left">
+            <ons-input name="clear" type="radio" input-id="clearAll" checked></ons-input>
+          </label>
+          <label for="clearAll" class="center">
+            All auctions
+          </label>
         </ons-list-item>
         <ons-list-item tappable>
-            <label class="right">
-                <ons-input name="HistoryDates" type="radio" input-id="History7Days"></ons-input>
-            </label>
-            <label for="History7Days" class="center">
-                Last 7 days
-            </label>
+          <label class="left">
+            <ons-input name="clear" type="radio" input-id="clearClosed"></ons-input>
+          </label>
+          <label for="clearClosed" class="center">
+            Closed only
+          </label>
         </ons-list-item>
-        <ons-list-item tappable>
-            <label class="right">
-                <ons-input name="HistoryDates" type="radio" input-id="History30Days"></ons-input>
-            </label>
-            <label for="History30Days" class="center">
-                Last 30 days
-            </label>
-        </ons-list-item>
-        <ons-list-item tappable>
-            <label class="right">
-                <ons-input name="HistoryDates" type="radio" input-id="HistoryAllTime" checked></ons-input>
-            </label>
-            <label for="HistoryAllTime" class="center">
-                All time
-            </label>
-        </ons-list-item>
-         
-    </ons-list>
-    <div style="padding: 10px; text-align: center;">
-            <ons-button modifier="outline" onclick="document.getElementById('popupFilterHistory').hide()">Ok</ons-button>
-            <ons-button modifier="outline" onclick="document.getElementById('popupFilterHistory').hide()">Cancel</ons-button>
-    </div>
-</ons-popover>
+      </ons-list>
+      </div>
+      <div class="alert-dialog-footer">
+        <button class="alert-dialog-button" onclick="hideDialog('dialogConfirmClearHistory')">Cancel</button>
+        <button class="alert-dialog-button" onclick="hideDialog('dialogConfirmClearHistory')">OK</button>
+      </div>
+    </ons-alert-dialog>
+</ons-template>
+-->
+
+<!--
+<ons-template id="dialogFilterHistory.html">
+    <ons-alert-dialog id="dialogFilterHistory" cancelable >
+      <div class="alert-dialog-title">History filters</div>
+      <div class="alert-dialog-content">
+        <ons-list>
+            <ons-list-item >
+              <div class="center">
+                Only active auctions
+              </div>
+              <div class="right">
+                <ons-switch></ons-switch>
+              </div>
+            </ons-list-item>
+            
+            <ons-list-header>Viewed:</ons-list-header>
+            <ons-list-item tappable>
+                <label class="right">
+                    <ons-input name="HistoryDates" type="radio" input-id="HistoryToday"></ons-input>
+                </label>
+                <label for="HistoryToday" class="center">
+                    Today
+                </label>
+            </ons-list-item>
+            <ons-list-item tappable>
+                <label class="right">
+                    <ons-input name="HistoryDates" type="radio" input-id="History7Days"></ons-input>
+                </label>
+                <label for="History7Days" class="center">
+                    Last 7 days
+                </label>
+            </ons-list-item>
+            <ons-list-item tappable>
+                <label class="right">
+                    <ons-input name="HistoryDates" type="radio" input-id="History30Days"></ons-input>
+                </label>
+                <label for="History30Days" class="center">
+                    Last 30 days
+                </label>
+            </ons-list-item>
+            <ons-list-item tappable>
+                <label class="right">
+                    <ons-input name="HistoryDates" type="radio" input-id="HistoryAllTime" checked></ons-input>
+                </label>
+                <label for="HistoryAllTime" class="center">
+                    All time
+                </label>
+            </ons-list-item>
+        </ons-list>
+      </div>
+      <div class="alert-dialog-footer">
+        <button class="alert-dialog-button" onclick="hideDialog('dialogFilterHistory')">Cancel</button>
+        <button class="alert-dialog-button" onclick="hideDialog('dialogFilterHistory')">OK</button>
+      </div>
+    </ons-alert-dialog>
+</ons-template>
+-->
+
+<!--
+<ons-template id="dialogConnectionLost.html">
+    <ons-alert-dialog id="dialogConnectionLost" cancelable >
+      <div class="alert-dialog-title"><ons-icon icon="fa-exclamation-triangle" style="color: #fa0" size="20px"></ons-icon> WARNING</div>
+      <div class="alert-dialog-content">
+        <p>Internet connection is lost!</p>
+        <p>Please make sure that you can control your auctions in another way!</p>
+        <p style="text-align:center"><img src="images/no_plug.png"/></p>
+        <p>
+            <ons-input type="checkbox" input-id="dontShowConnectionAlert" onchange="document.getElementById('dialogConnectionLost').cancelable = false;"></ons-input>
+            <label for="dontShowConnectionAlert" >Don't show again</label>
+        </p>
+      </div>
+      <div class="alert-dialog-footer">
+        <button class="alert-dialog-button" onclick="showConnectionAlert = !document.getElementById('dontShowConnectionAlert').checked; window.localStorage.setItem('showConnectionAlert', JSON.stringify(showConnectionAlert)); hideDialog('dialogConnectionLost')">OK</button>
+      </div>
+    </ons-alert-dialog>
+</ons-template>
+-->
+
+<!--
+<ons-template id="menuMore.html">
+    <ons-popover direction="down" cancelable cover-target id="menuMore">
+        <ons-list>
+            <ons-list-item tappable>
+              <div class="left">
+                <ons-icon icon="fa-search" class="list__item__icon" fixed-width="true"></ons-icon>
+              </div>
+              <div class="center">
+                Find and win
+              </div>
+            </ons-list-item>
+            <ons-list-item tappable>
+              <div class="left">
+                <ons-icon icon="fa-plus" class="list__item__icon" fixed-width="true"></ons-icon>
+              </div>
+              <div class="center">
+                Create and earn
+              </div>
+            </ons-list-item>
+            <ons-list-item tappable>
+              <div class="left">
+                <ons-icon icon="fa-question" class="list__item__icon" fixed-width="true"></ons-icon>
+              </div>
+              <div class="center">
+                Help
+              </div>
+            </ons-list-item>
+        </ons-list>
+        <div style="padding: 10px; text-align: center;">
+                <ons-button modifier="outline" onclick="document.getElementById('menuMore').hide()">Cancel</ons-button>
+        </div>
+    </ons-popover>
 </ons-template>  
 -->
+
+<!--
+<ons-template id="menuAuction.html">
+    <ons-popover direction="down" cancelable cover-target id="menuAuction">
+        <ons-list>
+            <ons-list-item tappable>
+              <div class="left">
+                <ons-icon icon="fa-info" class="list__item__icon" fixed-width="true"></ons-icon>
+              </div>
+              <div class="center">
+                Details
+              </div>
+            </ons-list-item>
+            <ons-list-item tappable>
+              <div class="left">
+                <ons-icon icon="fa-gavel" class="list__item__icon" fixed-width="true"></ons-icon>
+              </div>
+              <div class="center">
+                Make a bid
+              </div>
+            </ons-list-item>
+            <ons-list-item tappable>
+              <div class="left">
+                <ons-icon icon="fa-eye" class="list__item__icon" fixed-width="true"></ons-icon>
+              </div>
+              <div class="center">
+                Watch
+              </div>
+            </ons-list-item>
+        </ons-list>
+        <div style="padding: 10px; text-align: center;">
+                <ons-button modifier="outline" onclick="document.getElementById('menuAuction').hide()">Cancel</ons-button>
+        </div>
+    </ons-popover>
+</ons-template>  
+-->
+
 
 </body>
 </html>

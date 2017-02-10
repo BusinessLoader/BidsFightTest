@@ -1,0 +1,181 @@
+<!--<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src *; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+    <link rel="stylesheet" href="components/loader.css">
+    <script src="components/loader.js"></script>
+    <script>
+        //
+        // TODO: Write JavaScript code here
+        //
+    </script>
+</head>
+<body>
+    
+    
+<ons-template id="HomeWatch.html">-->
+    <ons-page id="HomeWatch">
+        <div class="content" style="text-align: center">
+        <p>List of your watched auctions:</p>
+              <hr />
+        <ons-list modifier="noborder">
+            
+            <ons-list-item  tappable modifier="nodivider" class="list-item-container" onclick="showAuctionInfo()">
+              <ons-row>
+                <ons-col width="95px">
+                  <img src="images/location1.png" class="thumbnail">
+                </ons-col>
+                <ons-col >
+                  <div class="auction-title">
+                    Eiffel Tower
+                  </div>
+                  <p></p>
+                  <div  class="name">
+                    Current bid: <span class="current-bid">$123</span>
+                  </div>
+                  <div class="name">
+                    Time to left: <span class="time-left">1h 15m</span>
+                  </div>
+                </ons-col>
+                <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showPopover('menuAuction',this)"></ons-icon></ons-col>
+              </ons-row>
+              <ons-row>
+                  <div class="desc">
+                    <p>Eiffel Tower is the symbol of Paris and named by Gustave Eiffel.</p>
+                  </div>
+              </ons-row>
+              <ons-row style="text-align:center">
+                  <ons-col width="50%">
+                  <div class="location">
+                    <a class="theme" href="#" onclick="window.open('https://www.google.ru/maps/@48.8582889,2.2927593,17z', '_system')"><i class="fa fa-map-marker"></i> Paris, France</a>
+                  </div>
+                  </ons-col>
+                  <ons-col width="50%">
+                  <div class="desc"><a class="theme" href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  </ons-col>
+              </ons-row>
+            </ons-list-item>
+              <hr />
+
+            <ons-list-item   tappable modifier="nodivider" class="list-item-container"  onclick="showAuctionInfo()">
+              <ons-row>
+                <ons-col width="95px">
+                  <img src="images/location2.png" class="thumbnail">
+                </ons-col>
+                <ons-col >
+                  <div class="auction-title">
+                    Monument Valley
+                  </div>
+                  <p></p>
+                  <div  class="name">
+                    Current bid: <span class="current-bid">$123</span>
+                  </div>
+                  <div class="name">
+                    Time to left: <span class="time-left">1h 15m</span>
+                  </div>
+                </ons-col>
+                <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showPopover('menuAuction',this)"></ons-icon></ons-col>
+              </ons-row>
+              <ons-row>
+                  <div class="desc">
+                    <p>Director John Ford used Monument Valley for a number of his best-known films.</p>
+                  </div>
+              </ons-row>
+              <ons-row style="text-align:center">
+                  <ons-col width="50%">
+                  <div class="location">
+                    <a class="theme" href="#" onclick="window.open('https://www.google.ru/maps/@37.0533978,-110.3478826,11.01z', '_system')"><i class="fa fa-map-marker"></i> Utah, USA</a>
+                  </div>
+                  </ons-col>
+                  <ons-col width="50%">
+                  <div class="desc"><a class="theme" href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  </ons-col>
+              </ons-row>
+            </ons-list-item>
+              <hr />
+
+            <ons-list-item   tappable modifier="nodivider" class="list-item-container"  onclick="showAuctionInfo()">
+              <ons-row>
+                <ons-col width="95px">
+                  <img src="images/location3.png" class="thumbnail">
+                </ons-col>
+                <ons-col >
+                  <div class="auction-title">
+                    Mount Fuji
+                  </div>
+                  <p></p>
+                  <div  class="name">
+                    Current bid: <span class="current-bid">$123</span>
+                  </div>
+                  <div class="name">
+                    Time to left: <span class="time-left">1h 15m</span>
+                  </div>
+                </ons-col>
+                <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showPopover('menuAuction',this)"></ons-icon></ons-col>
+              </ons-row>
+              <ons-row>
+                  <div class="desc">
+                    <p>Mount Fuji is the highest mountain in Japan and a frequent attractive subject of Japanese art.</p>
+                  </div>
+              </ons-row>
+              <ons-row style="text-align:center">
+                  <ons-col width="50%">
+                  <div class="location">
+                    <a class="theme" href="#" onclick="window.open('https://www.google.ru/maps/@35.3605599,138.7255837,12z', '_system')"><i class="fa fa-map-marker"></i> Japan</a>
+                  </div>
+                  </ons-col>
+                  <ons-col width="50%">
+                  <div class="desc"><a class="theme" href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  </ons-col>
+              </ons-row>
+            </ons-list-item>
+              <hr />
+
+            <ons-list-item  tappable modifier="nodivider" class="list-item-container"  onclick="showAuctionInfo()">
+              <ons-row>
+                <ons-col width="95px">
+                  <img src="images/location4.png" class="thumbnail">
+                </ons-col>
+                <ons-col >
+                  <div class="auction-title">
+                    Tokyo Tower
+                  </div>
+                  <p></p>
+                  <div  class="name">
+                    Current bid: <span class="current-bid">$123</span>
+                  </div>
+                  <div class="name">
+                    Time to left: <span class="time-left">1h 15m</span>
+                  </div>
+                </ons-col>
+                <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showPopover('menuAuction',this)"></ons-icon></ons-col>
+              </ons-row>
+              <ons-row>
+                  <div class="desc">
+                    <p>Tokyo Tower is a communications and observation tower located in Tokyo, Japan.</p>
+                  </div>
+              </ons-row>
+              <ons-row style="text-align:center">
+                  <ons-col width="50%">
+                  <div class="location">
+                    <a class="theme" href="#" onclick="window.open('https://www.google.ru/maps/@35.6586284,139.7452451,18z', '_system')"><i class="fa fa-map-marker"></i> Tokyo, Japan</a>
+                  </div>
+                  </ons-col>
+                  <ons-col width="50%">
+                  <div class="desc"><a class="theme" href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  </ons-col>
+              </ons-row>
+            </ons-list-item>
+              <hr />
+
+
+        </ons-list>
+        </div>
+    </ons-page>
+<!--</ons-template>
+    
+    
+</body>
+</html>-->

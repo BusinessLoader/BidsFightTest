@@ -1,0 +1,53 @@
+    <ons-alert-dialog id="dialogFilterHistory" cancelable >
+      <div class="alert-dialog-title">History filters</div>
+      <div class="alert-dialog-content">
+        <ons-list>
+            <ons-list-item >
+              <div class="center">
+                Only active auctions
+              </div>
+              <div class="right">
+                <ons-switch></ons-switch>
+              </div>
+            </ons-list-item>
+            
+            <ons-list-header>Viewed:</ons-list-header>
+            <ons-list-item tappable>
+                <label class="right">
+                    <ons-input name="HistoryDates" type="radio" input-id="HistoryToday"></ons-input>
+                </label>
+                <label for="HistoryToday" class="center">
+                    Today
+                </label>
+            </ons-list-item>
+            <ons-list-item tappable>
+                <label class="right">
+                    <ons-input name="HistoryDates" type="radio" input-id="History7Days"></ons-input>
+                </label>
+                <label for="History7Days" class="center">
+                    Last 7 days
+                </label>
+            </ons-list-item>
+            <ons-list-item tappable>
+                <label class="right">
+                    <ons-input name="HistoryDates" type="radio" input-id="History30Days"></ons-input>
+                </label>
+                <label for="History30Days" class="center">
+                    Last 30 days
+                </label>
+            </ons-list-item>
+            <ons-list-item tappable>
+                <label class="right">
+                    <ons-input name="HistoryDates" type="radio" input-id="HistoryAllTime" checked></ons-input>
+                </label>
+                <label for="HistoryAllTime" class="center">
+                    All time
+                </label>
+            </ons-list-item>
+        </ons-list>
+      </div>
+      <div class="alert-dialog-footer">
+        <button class="alert-dialog-button" onclick="hideDialog('dialogFilterHistory')">Cancel</button>
+        <button class="alert-dialog-button" onclick="hideDialog('dialogFilterHistory')">OK</button>
+      </div>
+    </ons-alert-dialog>

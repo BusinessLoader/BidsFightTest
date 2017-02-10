@@ -1,0 +1,18 @@
+    <ons-page id="Search">
+        <ons-toolbar>
+            <div class="left"><ons-back-button>Back</ons-back-button></div>
+            <div class="center">
+                Search
+            </div>
+            <div class="right">
+                <ons-toolbar-button onclick="document.getElementById('navigator').resetToPage('Home.html')"><ons-icon icon="fa-home"></ons-icon></ons-toolbar-button>
+                <ons-toolbar-button><div class="notification events-notification">12</div><ons-icon icon="fa-bell"></ons-icon></ons-toolbar-button>
+                <ons-toolbar-button onclick="showPopover('menuMore',this)"><ons-icon icon="fa-ellipsis-v"></ons-icon></ons-toolbar-button>
+            </div>
+        </ons-toolbar>
+        <ons-tabbar position="top" animation="slide" id="SearchTabbar">
+            <ons-tab icon="fa-crosshairs" label="Quick" page="SearchSimple.html"></ons-tab>
+            <ons-tab icon="fa-sliders" label="Advanced" page="SearchAdvanced.html"></ons-tab>
+            <ons-tab icon="fa-list-ol" label="Results" page="SearchResults.html"></ons-tab>
+        </ons-tabbar>
+    </ons-page>

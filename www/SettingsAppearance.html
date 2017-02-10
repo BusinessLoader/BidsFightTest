@@ -1,0 +1,36 @@
+    <ons-page id="SettingsAppearance">
+        <ons-toolbar>
+            <div class="left"><ons-back-button>Back</ons-back-button></div>
+            <div class="center">
+                Appearance
+            </div>
+            <div class="right">
+                <ons-toolbar-button onclick="document.getElementById('navigator').resetToPage('Home.html')"><ons-icon icon="fa-home"></ons-icon></ons-toolbar-button>
+                <ons-toolbar-button><div class="notification events-notification">12</div><ons-icon icon="fa-bell"></ons-icon></ons-toolbar-button>
+                <ons-toolbar-button onclick="showPopover('menuMore',this)"><ons-icon icon="fa-ellipsis-v"></ons-icon></ons-toolbar-button>
+            </div>
+        </ons-toolbar>
+        
+        <p style="text-align: center; margin: 16px">Here you can change the settings for appearance:</p>
+              <hr />
+        <ons-list modifier="noborder">
+            <ons-list-item modifier="nodivider">Visual theme:</ons-list-item>
+            <ons-list-item tappable modifier="nodivider">
+              <label class="left">
+                <ons-input name="themeName" type="radio" input-id="themeDefault" checked onchange="themeName = 'themeDefault';window.localStorage.setItem('themeName', themeName);setTheme();"></ons-input>
+              </label>
+              <label for="themeDefault" class="center">
+                Default
+              </label>
+            </ons-list-item>
+            <ons-list-item tappable modifier="nodivider">
+              <label class="left">
+                <ons-input name="themeName" type="radio" input-id="themeDark" onchange="themeName = 'themeDark';window.localStorage.setItem('themeName', themeName);setTheme();"></ons-input>
+              </label>
+              <label for="themeDark" class="center">
+                Dark
+              </label>
+            </ons-list-item>
+        </ons-list>
+        </div>
+    </ons-page>

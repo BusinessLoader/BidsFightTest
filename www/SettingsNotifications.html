@@ -1,0 +1,23 @@
+    <ons-page id="SettingsNotifications">
+        <ons-toolbar>
+            <div class="left"><ons-back-button>Back</ons-back-button></div>
+            <div class="center">
+                Notifications
+            </div>
+            <div class="right">
+                <ons-toolbar-button onclick="document.getElementById('navigator').resetToPage('Home.html')"><ons-icon icon="fa-home"></ons-icon></ons-toolbar-button>
+                <ons-toolbar-button><div class="notification events-notification">12</div><ons-icon icon="fa-bell"></ons-icon></ons-toolbar-button>
+                <ons-toolbar-button onclick="showPopover('menuMore',this)"><ons-icon icon="fa-ellipsis-v"></ons-icon></ons-toolbar-button>
+            </div>
+        </ons-toolbar>
+        
+        <p style="text-align: center; margin: 16px">Here you can change the settings for notifications:</p>
+              <hr />
+        <ons-list modifier="noborder">
+            <ons-list-item modifier="longdivider" >
+            <div class="center">Internet connection alert</div>
+            <div class="right"><ons-switch id="showConnectionAlert" onchange="showConnectionAlert = this.checked;window.localStorage.setItem('showConnectionAlert', JSON.stringify(showConnectionAlert));"></ons-switch></div>
+            </ons-list-item>
+        </ons-list>
+        </div>
+    </ons-page>

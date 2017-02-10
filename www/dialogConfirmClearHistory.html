@@ -1,0 +1,29 @@
+    <ons-alert-dialog id="dialogConfirmClearHistory" cancelable >
+      <div class="alert-dialog-title">Clear history</div>
+      <div class="alert-dialog-content">
+        <p>Do you want clear history of previously viewed auctions?</p>
+      <ons-list>
+        <!--<ons-list-header>Clear auctions:</ons-list-header>-->
+        <ons-list-item tappable>
+          <label class="left">
+            <ons-input name="clear" type="radio" input-id="clearAll" checked></ons-input>
+          </label>
+          <label for="clearAll" class="center">
+            All auctions
+          </label>
+        </ons-list-item>
+        <ons-list-item tappable>
+          <label class="left">
+            <ons-input name="clear" type="radio" input-id="clearClosed"></ons-input>
+          </label>
+          <label for="clearClosed" class="center">
+            Closed only
+          </label>
+        </ons-list-item>
+      </ons-list>
+      </div>
+      <div class="alert-dialog-footer">
+        <button class="alert-dialog-button" onclick="hideDialog('dialogConfirmClearHistory')">Cancel</button>
+        <button class="alert-dialog-button" onclick="hideDialog('dialogConfirmClearHistory')">OK</button>
+      </div>
+    </ons-alert-dialog>
