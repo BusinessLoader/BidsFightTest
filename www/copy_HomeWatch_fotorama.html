@@ -1,0 +1,241 @@
+<!--<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src *; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+    <link rel="stylesheet" href="components/loader.css">
+    <script src="components/loader.js"></script>
+    <script>
+        //
+        // TODO: Write JavaScript code here
+        //
+    </script>
+</head>
+<body>
+    
+    
+<ons-template id="HomeWatch.html">-->
+    <ons-page id="HomeWatch">
+        <div class="content" style="text-align: center">
+        <p>List of your watched auctions:</p>
+              <hr />
+        <ons-list modifier="noborder">
+            
+            <ons-list-item   tappable modifier="nodivider" class="item-card">
+                <div  class="center card" onclick="showAuctionInfo()">
+                  <!--<ons-ripple></ons-ripple>-->
+                  <ons-row>
+                    <ons-col width="110px">
+                      <!--<img src="images/location1.png" class="thumbnail">-->
+                      <!--<div class="fotorama" data-width="100%" data-ratio="800/600" data-loop="true" data-autoplay="3000" data-arrows="false" data-click="true" data-swipe="true" data-nav="false" data-allowfullscreen="false" data-keyboard="false" ontouchstart="event.stopPropagation()" ontouchend="event.stopPropagation()" onmousedown="event.stopPropagation()" onmouseup="event.stopPropagation()" ontap="console.log('tap')" onclick="console.log('click');event.stopPropagation();switchPreviewFullScreen(this)">-->
+                      <div class="fotorama" data-auto="false" data-width="100%" data-ratio="800/600" data-stopautoplayontouch="true" data-loop="true" data-autoplay="3000" data-arrows="false" data-click="true" data-swipe="true" data-trackpad="false" data-nav="false" data-allowfullscreen="false" data-keyboard="false" ontouchstart="console.log('touchstart');" ontouchend="console.log('touchend');switchPreviewFullScreen(this)" onmousedown="console.log('mousedown');" onmouseup="console.log('mouseup');" ontap="console.log('tap')" onclick="console.log('click');switchPreviewFullScreen(this);event.stopPropagation();">
+                          <a href="images/eiffel1.jpg"></a>
+                          <a href="images/eiffel2.jpg"></a>
+                          <a href="images/eiffel3.jpg"></a>
+                          <a href="images/eiffel4.jpg"></a>
+                      </div>
+                    </ons-col>
+                    <ons-col width="5px">
+                    </ons-col>
+                    <ons-col >
+                      <div class="auction-title">
+                        Eiffel Tower
+                      </div>
+                      <p></p>
+                      <div class="phone">
+                        <a href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" size="13px" fixed-width="true"></ons-icon> 1-800-123-4567</a>
+                      </div>
+                      <div class="location">
+                        <a href="#" onclick="window.open('https://www.google.ru/maps/@48.8582889,2.2927593,17z', '_system')"><ons-icon icon="fa-map-marker" size="13px" fixed-width="true"></ons-icon> Paris, France</a>
+                      </div>
+                    </ons-col>
+                    <ons-col width="40px" style="text-align:center; font-size:2em; color:gray" ontouchstart="event.stopPropagation()" ontouchend="event.stopPropagation()" onmousedown="event.stopPropagation()" onmouseup="event.stopPropagation()" onclick="event.stopPropagation()">
+                        <ons-icon icon="fa-ellipsis-v" onclick="showPopover('menuAuction',this)" fixed-width="true"></ons-icon>
+                    </ons-col>
+                  </ons-row>
+                  <ons-row>
+                      <div class="desc">
+                        <p>Eiffel Tower is the symbol of Paris and named by Gustave Eiffel.</p>
+                      </div>
+                  </ons-row>
+                  <ons-row class="current-info">
+                          <ons-col width="33%">
+                                Current bid:<br/>
+                                <div class="current-bid">$123</div>
+                          </ons-col>
+                          <ons-col width="33%">
+                                Time to left:<br/>
+                                <div class="time-left-hot animated infinite pulse-with-shadow">1h 15m</div>
+                          </ons-col>
+                          <ons-col width="33%">
+                                Leader:
+                                <!--<div class="leader">Joe Doe</div>-->
+                                <div class="leader-me"><ons-icon style="color:darkorange" icon="fa-trophy"></ons-icon> It's Me!</div>
+                          </ons-col>
+                  </ons-row>
+                  <ons-row style="color:#d11; text-align:center; padding:3px" >
+                    <ons-col>
+                        <ons-icon icon="fa-warning"></ons-icon>&nbsp<span class="animated infinite flashInterval">You have lost the leading position!<span>
+                    </ons-col>
+                  </ons-row>
+                  <div ontouchstart="event.stopPropagation()" ontouchend="event.stopPropagation()" onmousedown="event.stopPropagation()" onmouseup="event.stopPropagation()" onclick="event.stopPropagation();document.getElementById('colMakeBid').style.maxWidth='100%';document.getElementById('colMakeBid').style.flexBasis='100%';document.getElementById('colSpace').style.maxWidth='0%';document.getElementById('colSpace').style.flexBasis='0%';document.getElementById('colWinNow').style.maxWidth='0%';document.getElementById('colWinNow').style.flexBasis='0%';document.getElementById('bidPanel').style.maxHeight='0px';document.getElementById('bidPanel').style.top='-60px'"><!-- div нужен для того, чтобы в нём при клике/тапе заблокировать tappable эфффект и открытие страницы аукциона -->
+                  <ons-row style="overflow: hidden; text-align:center">
+                    <ons-col width="100%">
+                        <div id="bidPanel" style="padding:5px;position:relative;max-height:0px;top:-60px;overflow:hidden;transition: max-height 1s cubic-bezier(0.0, 0.5, 0.5 ,1.0), top 1s cubic-bezier(0.0, 0.5, 0.5 ,1.0);">
+                          <ons-row>
+                            <ons-col width="45%" vertical-align="top" style="font-weight:800; line-height:1.5em">
+                                Your bid:</br>
+                                <input style="font-size: 17px;text-align:center;width:80%" class="current-bid" type="text" value="150"></input>
+                            </ons-col>
+                            <ons-col width="10%" vertical-align="center" style="text-align:center">
+                                OR
+                            </ons-col>
+                            <ons-col width="45%" vertical-align="top" style="font-weight:800;; line-height:1.5em">
+                                Win now for:</br>
+                                <input disabled style="font-size: 17px;text-align:center;width:80%" class="current-bid" type="text" value="$300"></input>
+                            </ons-col>
+                          </ons-row>
+                        </div>
+                    </ons-col>
+                  </ons-row>
+                  <ons-row style="text-align:center;padding-top:5px">
+                    <ons-col width="100%" class="width-transition" id="colMakeBid">
+                        <ons-button style="width:100%" class="buttonCTA infinite headShakeInterval" onclick="event.stopPropagation();document.getElementById('colMakeBid').style.maxWidth='47%';document.getElementById('colMakeBid').style.flexBasis='47%';document.getElementById('colSpace').style.maxWidth='6%';document.getElementById('colSpace').style.flexBasis='6%';document.getElementById('colWinNow').style.maxWidth='47%';document.getElementById('colWinNow').style.flexBasis='47%';document.getElementById('bidPanel').style.maxHeight=document.getElementById('bidPanel').scrollHeight+'px';document.getElementById('bidPanel').style.top='0px'"><ons-icon icon="fa-gavel"></ons-icon> Make a bid!</ons-button>
+                    </ons-col>
+                    <ons-col width="0%" class="width-transition" id="colSpace">
+                        &nbsp
+                    </ons-col>
+                    <ons-col width="0%" class="width-transition" id="colWinNow">
+                        <ons-button style="width:100%" class="buttonCTA"><ons-icon icon="fa-trophy"></ons-icon> Win now!</ons-button>
+                    </ons-col>
+                    <!--<ons-col width="33%">
+                        <ons-button modifier="outline"><ons-icon icon="fa-share-alt"></ons-icon> Share</ons-button>
+                    </ons-col>-->
+                  </ons-row>
+                  </div>
+                </div>
+            </ons-list-item>
+            
+              <hr />
+
+            <ons-list-item   tappable modifier="nodivider" class="list-item-container"  onclick="showAuctionInfo()">
+              <ons-row>
+                <ons-col width="95px">
+                  <img src="images/location2.png" class="thumbnail">
+                </ons-col>
+                <ons-col >
+                  <div class="auction-title">
+                    Monument Valley
+                  </div>
+                  <p></p>
+                  <div  class="name">
+                    Current bid: <span class="current-bid">$123</span>
+                  </div>
+                  <div class="name">
+                    Time to left: <span class="time-left">1h 15m</span>
+                  </div>
+                </ons-col>
+                <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showPopover('menuAuction',this)"></ons-icon></ons-col>
+              </ons-row>
+              <ons-row>
+                  <div class="desc">
+                    <p>Director John Ford used Monument Valley for a number of his best-known films.</p>
+                  </div>
+              </ons-row>
+              <ons-row style="text-align:center">
+                  <ons-col width="50%">
+                  <div class="location">
+                    <a class="theme" href="#" onclick="window.open('https://www.google.ru/maps/@37.0533978,-110.3478826,11.01z', '_system')"><i class="fa fa-map-marker"></i> Utah, USA</a>
+                  </div>
+                  </ons-col>
+                  <ons-col width="50%">
+                  <div class="desc"><a class="theme" href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  </ons-col>
+              </ons-row>
+            </ons-list-item>
+              <hr />
+
+            <ons-list-item   tappable modifier="nodivider" class="list-item-container"  onclick="showAuctionInfo()">
+              <ons-row>
+                <ons-col width="95px">
+                  <img src="images/location3.png" class="thumbnail">
+                </ons-col>
+                <ons-col >
+                  <div class="auction-title">
+                    Mount Fuji
+                  </div>
+                  <p></p>
+                  <div  class="name">
+                    Current bid: <span class="current-bid">$123</span>
+                  </div>
+                  <div class="name">
+                    Time to left: <span class="time-left">1h 15m</span>
+                  </div>
+                </ons-col>
+                <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showPopover('menuAuction',this)"></ons-icon></ons-col>
+              </ons-row>
+              <ons-row>
+                  <div class="desc">
+                    <p>Mount Fuji is the highest mountain in Japan and a frequent attractive subject of Japanese art.</p>
+                  </div>
+              </ons-row>
+              <ons-row style="text-align:center">
+                  <ons-col width="50%">
+                  <div class="location">
+                    <a class="theme" href="#" onclick="window.open('https://www.google.ru/maps/@35.3605599,138.7255837,12z', '_system')"><i class="fa fa-map-marker"></i> Japan</a>
+                  </div>
+                  </ons-col>
+                  <ons-col width="50%">
+                  <div class="desc"><a class="theme" href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  </ons-col>
+              </ons-row>
+            </ons-list-item>
+              <hr />
+
+            <ons-list-item  tappable modifier="nodivider" class="list-item-container"  onclick="showAuctionInfo()">
+              <ons-row>
+                <ons-col width="95px">
+                  <img src="images/location4.png" class="thumbnail">
+                </ons-col>
+                <ons-col >
+                  <div class="auction-title">
+                    Tokyo Tower
+                  </div>
+                  <p></p>
+                  <div  class="name">
+                    Current bid: <span class="current-bid">$123</span>
+                  </div>
+                  <div class="name">
+                    Time to left: <span class="time-left">1h 15m</span>
+                  </div>
+                </ons-col>
+                <ons-col width="40px" style="text-align:center; font-size:2em; color:gray"><ons-icon icon="fa-ellipsis-v" onclick="showPopover('menuAuction',this)"></ons-icon></ons-col>
+              </ons-row>
+              <ons-row>
+                  <div class="desc">
+                    <p>Tokyo Tower is a communications and observation tower located in Tokyo, Japan.</p>
+                  </div>
+              </ons-row>
+              <ons-row style="text-align:center">
+                  <ons-col width="50%">
+                  <div class="location">
+                    <a class="theme" href="#" onclick="window.open('https://www.google.ru/maps/@35.6586284,139.7452451,18z', '_system')"><i class="fa fa-map-marker"></i> Tokyo, Japan</a>
+                  </div>
+                  </ons-col>
+                  <ons-col width="50%">
+                  <div class="desc"><a class="theme" href="tel:1-800-123-4567" target="_blank" onclick="window.open('tel:1-800-123-4567', '_system')"><ons-icon icon="fa-phone" fixed-width="false" size="13px"></ons-icon> 1-800-123-4567</a></div>
+                  </ons-col>
+              </ons-row>
+            </ons-list-item>
+              <hr />
+
+
+        </ons-list>
+        </div>
+    </ons-page>
+<!--</ons-template>
+    
+    
+</body>
+</html>-->

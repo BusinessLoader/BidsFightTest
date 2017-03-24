@@ -1,0 +1,78 @@
+    <ons-alert-dialog id="dialogMakeBid" cancelable >
+      <div class="alert-dialog-title">Make a bid!</div>
+      <div class="alert-dialog-content">
+        
+                  <ons-row style="overflow: hidden; text-align:center; padding-top:5px">
+                            <ons-col width="55%" vertical-align="top" style="text-align:right; font-weight:800; line-height:1.5em">
+                                Your bid:
+                            </ons-col>
+                            <ons-col width="5%" vertical-align="top" style="text-align:center; font-weight:800; line-height:1.5em">
+                                &nbsp;
+                            </ons-col>
+                            <ons-col width="40%" vertical-align="top" style="text-align:left; font-weight:800; line-height:1.5em">
+                                <input style="font-size: 17px;text-align:center;width:80%" class="current-bid" type="text" value="350"></input>
+                            </ons-col>
+                  </ons-row>
+                  <ons-row style="text-align:center;padding-top:5px">
+                    <ons-col width="100%" class="width-transition colMakeBid">
+                        <ons-button style="width:100%" class="buttonCTA infinite headShakeInterval"><ons-icon icon="fa-gavel"></ons-icon> Make a bid!</ons-button>
+                    </ons-col>
+                  </ons-row>
+                  
+                  <ons-row style="text-align:center;padding-top:5px">
+                    <ons-col width="100%" vertical-align="top" class="width-transition colMakeBid">
+                        <br />
+                        OR
+                        <br />
+                        <br />
+                    </ons-col>
+                  </ons-row>
+                  
+                  <ons-row style="overflow: hidden; text-align:center; padding-top:5px">
+                            <ons-col width="55%" vertical-align="top" style="text-align:right; font-weight:800; line-height:1.5em">
+                                Win now for:
+                            </ons-col>
+                            <ons-col width="5%" vertical-align="top" style="text-align:center; font-weight:800; line-height:1.5em">
+                                &nbsp;
+                            </ons-col>
+                            <ons-col width="40%" vertical-align="top" style="text-align:left; font-weight:800; line-height:1.5em">
+                                <input disabled style="font-size: 17px;text-align:center;width:80%" class="current-bid" type="text" value="$500"></input>
+                            </ons-col>
+                  </ons-row>
+                  <ons-row style="text-align:center;padding-top:5px">
+                    <ons-col width="100%" class="width-transition colMakeBid">
+                        <ons-button style="width:100%" class="buttonCTA "><ons-icon icon="fa-trophy"></ons-icon> Win now!</ons-button>
+                    </ons-col>
+                  </ons-row>
+                  
+                  <!--
+                            <ons-col width="10%" vertical-align="center" style="text-align:center">
+                                OR
+                            </ons-col>
+                            <ons-col width="45%" vertical-align="top" style="font-weight:800;; line-height:1.5em">
+                                Win now for:</br>
+                                <input disabled style="font-size: 17px;text-align:center;width:80%" class="current-bid" type="text" value="$500"></input>
+                            </ons-col>
+                          </ons-row>
+                        </div>
+                    </ons-col>
+                  </ons-row>
+                  <ons-row style="text-align:center;padding-top:5px">
+                    <ons-col width="50%" class="width-transition colMakeBid">
+                        <ons-button style="width:100%" class="buttonCTA " onclick="event.stopPropagation();MakeBid()/*showBidPanel(this, true)*/"><ons-icon icon="fa-gavel"></ons-icon> Make a bid!</ons-button>
+                    </ons-col>
+                    <ons-col width="6%" class="width-transition colSpace">
+                        &nbsp
+                    </ons-col>
+                    <ons-col width="47%" class="width-transition colWinNow">
+                        <ons-button style="width:100%" class="buttonCTA"><ons-icon icon="fa-trophy"></ons-icon> Win now!</ons-button>
+                    </ons-col>
+                  </ons-row>
+        
+                -->
+        
+      </div>
+      <div class="alert-dialog-footer">
+        <button class="alert-dialog-button" onclick="hideDialog('dialogMakeBid')">Later</button>
+      </div>
+    </ons-alert-dialog>

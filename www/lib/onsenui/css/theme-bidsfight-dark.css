@@ -1808,13 +1808,13 @@ ons-range[disabled] .range {
   -webkit-box-shadow: none;
   box-shadow: none;
   background-color: transparent;
-  color: #a11;
+  color: #ccc;
 }
 .button--material--flat:active {
   -webkit-box-shadow: none;
   box-shadow: none;
   background-color: transparent;
-  color: #a11;
+  color: #ccc;
   outline: 0;
   opacity: 1;
   border: none;

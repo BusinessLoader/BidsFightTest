@@ -18,9 +18,6 @@
         "cordova-plugin-splashscreen": {
             "variables": []
         },
-        "phonegap-plugin-barcodescanner": {
-            "variables": []
-        },
         "cordova-plugin-x-toast": {
             "variables": []
         }
@@ -36,11 +33,11 @@
         "cordova-plugin-inappbrowser@1.5.0",
         "cordova-plugin-geolocation@2.2.0",
         "cordova-plugin-device@1.1.2",
-        "phonegap-plugin-barcodescanner",
         "cordova-plugin-dialogs@1.2.1",
         "cordova-plugin-network-information@1.2.1",
         "cordova-plugin-x-toast",
-        "cordova-universal-links-plugin"
+        "cordova-universal-links-plugin",
+        "phonegap-plugin-barcodescanner@6.0.5"
     ],
     "title-ja": "",
     "title-en": "BidsFightTest",

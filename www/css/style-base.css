@@ -14,25 +14,25 @@
     margin-left: 8px;
 }
 
-.animatedBtn {
+/*.animatedBtn {
     -webkit-animation-duration: 1s;
     -o-animation-duration: 1s;
     -moz-animation-duration: 1s;
     animation-duration: 1s;
     
-    -webkit-animation-delay: 0s;
-    -o-animation-delay: 0s;
-    -moz-animation-delay: 0s;
-    animation-delay: 0s;
+    -webkit-animation-delay: 5s;
+    -o-animation-delay: 5s;
+    -moz-animation-delay: 5s;
+    animation-delay: 5s;
     
     -webkit-animation-iteration-count: infinite;
     -o-animation-iteration-count: infinite;
     -moz-animation-iteration-count: infinite;
     animation-iteration-count: infinite;
- } 
+ }*/
  
 .buttonCTA {
-    background-color: #fa0; 
+    background-color: #ffa500; 
     color: #000;
     font-weight: 600;
  }
@@ -43,13 +43,24 @@
     font-weight: 600;
  }
  
- .list-item-container {
+ /*.list-item-container {
   line-height: 1;
   padding: 15px 0px 15px 15px;
+}*/
+
+.item-card {
+    padding-left: 0px;
+}
+
+.card {
+    margin-right: 10px;    
+    margin-left: 10px;    
+    padding: 10px;
+    overflow: hidden;
 }
 
 .panelCTA {
-    background-color: #fa0; 
+    background-color: #ffa500; 
     color: #000;
     font-weight: 400;
  }
@@ -57,8 +68,8 @@
 .thumbnail {
   width: 80px;
   height: 80px;
-  border-radius: 4px;
-  -webkit-border-radius: 4px;
+  /*border-radius: 4px;
+  -webkit-border-radius: 4px;*/
 }
 
 .auction-title {
@@ -77,13 +88,35 @@
 
 .location {
   font-size: 14px;
-  opacity: 0.6;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
+}
+
+.phone {
+  font-size: 14px;
+  margin-bottom: 4px;
 }
 
 .desc {
   line-height: 1.2;
   font-size: 13px;
+}
+
+.current-info {
+  font-weight: 400;
+  line-height: 16px;
+  font-size: 15px;
+  margin-bottom: 6px;
+  text-align:center;
+}
+
+.current-bid, .time-left, .time-left-warning, .time-left-hot, .leader, .leader-me {
+    font-weight: 800;
+    display: inline-block;
+    padding: 3px;
+}
+
+.leader-me {
+    border: solid 1px darkorange;
 }
 
 hr {
@@ -98,8 +131,17 @@ hr {
    line-height: 0;
    clear: both;
    border: none;
-   border-top: 1px solid #aaaaaa;
-   border-bottom: 1px solid #d11;
    color: #d11;
-   background-color: #d11;
+}
+
+.width-transition {
+    overflow: hidden;
+    transition: max-width 1s cubic-bezier(0.0, 0.5, 0.5 ,1.0), flex-basis 1s cubic-bezier(0.0, 0.5, 0.5 ,1.0);
+}
+
+.preview {
+    overflow: hidden;
+    background-size: auto 100%;
+    background-position: left top;
+    background-repeat: no-repeat;
 }

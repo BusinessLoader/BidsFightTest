@@ -16,19 +16,17 @@
   <link rel="stylesheet" href="css/style-base.css">
   <link id="themeStyle" rel="stylesheet" href="css/style-bidsfight.css">
   
-  <!--Animate.css содержит много анимаций и много весит. Только нужное вырезано и вставлено в файл animate-bidsfight.css-->
   <!--<link rel="stylesheet" href="css/animate.css">-->
   <link rel="stylesheet" href="css/animate-bidsfight.css">
 
-  
-    <!--<link  href="lib/fancybox/jquery.fancybox.min.css" rel="stylesheet">-->
-    <link  href="lib/fancybox/jquery.fancybox.min.css" rel="stylesheet">
-    <script src="lib/fancybox/jquery.fancybox.js"></script>
-  
+  <script src="lib/fotorama-4.6.4/fotorama.js"></script>
+  <link rel="stylesheet" href="lib/fotorama-4.6.4/fotorama.css">
+
+  <script src="lib/pinchzoom/pinchzoom.js"></script>
 
   <script>
   
-  var fullScreenFancyBox = false;
+  var fullScreenFotorama = null;
   
     ons.ready(onOnsReady);
     function onOnsReady()
@@ -52,14 +50,18 @@
             var myNavigator = document.getElementById('navigator');
             myNavigator.onDeviceBackButton = function(event) {
                 console.log('Hardware back button!');
-                if ( !fullScreenFancyBox )
+                if ( !fullScreenFotorama )
                 {
+                    event.callParentHandler(); // Calls the parent handler (navigator handler in this case)
+                }
+                else if ( !fullScreenFotorama.fullScreen )
+                {
+                    fullScreenFotorama = null;
                     event.callParentHandler(); // Calls the parent handler (navigator handler in this case)
                 }
                 else
                 {
-                    $.fancybox.close( true );
-                    fullScreenFancyBox = false;
+                    fullScreenFotorama.cancelFullScreen();
                 }
             };            
         }
@@ -285,16 +287,17 @@
         var page = event.target;
           //alert("show\r\n"+page); 
             
-        /*if (page.matches('#HomeWatch'))
+        if (page.matches('#HomeWatch'))
         {
-            $("[data-fancybox]").fancybox({
-            	// Options will go here
-                thumbs : {
-                showOnStart   : true, // Display thumbnails on opening
-            	hideOnClosing : true   // Hide thumbnail grid when closing animation starts
-                }                
-            });
-        }*/
+        //На мобильных устройствах при нажатии на картинку в галерее Fotorama не приходит событие ontap, потому что прерывается обработчиками галереи (а на десктопах onclick приходит).
+        //Поэтому пришлось открытие полноэкранного режима повесить на событие ontouchend. Но теперь, если мы уже в полноэкранном режиме и кликнули на иконку выхода из него, у нас сначала фоторама выходит из полноэкранного режима, а потом приходит наше событие ontouchend и мы опять включаем полный экран.
+        //чтобы этого избежать, вводим задержку включения полноэкранного режима после выхода из него.
+        //При этом слушатель события подключается только к уже существующим элементам, а у нас станицы шаблонов подгружаются динамически, поэтому нужно обновлять слушатели событий на загрузке страниц (по-хорошему, нужно только на загрузке тех, где есть галереи).
+        //Изначально планировалось добавить к событию init, но на нём периодически не срабатывает инициализация фоторамы (видимо, не всё к моменту init готово)
+        $('.fotorama').off('fotorama:fullscreenenter fotorama:fullscreenexit', fotoramaEventsHandler);
+        $('.fotorama').on('fotorama:fullscreenenter fotorama:fullscreenexit', fotoramaEventsHandler);
+        $('.fotorama').fotorama();
+        }
         
         
     });
@@ -306,6 +309,29 @@
         //alert("prepush\r\n"+page); 
     });
 
+    var duringFotoramaFullScreenExit = false;
+    function fotoramaEventsHandler(e, fotorama)
+    {
+        if (e.type === 'fotorama:fullscreenenter')
+        {
+            console.log("event fotorama:fullscreenenter");
+        }
+        else if (e.type === 'fotorama:fullscreenexit')
+        {
+            console.log("event fotorama:fullscreenexit");
+            duringFotoramaFullScreenExit = true;
+            setTimeout(function() { console.log("timeout fullscreenexit");duringFotoramaFullScreenExit = false; }, 1000);
+            //убираем элементы управления с маленькой картинки
+            fotorama.setOptions({
+                allowfullscreen : false,
+                arrows : false,
+                nav : false,
+                keyboard : false,
+                trackpad : false,
+            });
+            fullScreenFotorama = null;
+        }
+    }
     
     // Page init event
     document.addEventListener('init', function(event) {
@@ -472,241 +498,80 @@
         showAlertDialog('dialogFilterHistory');
     }
 
-    function MakeBid()
-    {
-        showAlertDialog('dialogMakeBid');
-    }
-
-
-    
-    function showFancyBox(auctionId)
-    {
-        var options = 
-        {
-            loop : true,
-            closeClickOutside : false,
-            thumbs : {
-            showOnStart   : true, // Display thumbnails on opening
-            hideOnClosing : true   // Hide thumbnail grid when closing animation starts
-            }                
-        };
-        
-        var images;
-        if ( auctionId == 1 )
-        {
-            images = 
-            [
-                {
-                	src  : 'images/eiffel1.jpg',
-            		opts : {
-            			caption : 'First caption'
-            		}
-            	},
-                {
-                    src  : 'https://www.youtube.com/watch?v=MMn0AollE5I&t=41',
-            		opts : {
-            			caption : 'YouTube video'
-            		}
-            	},
-            	{
-            		src  : 'images/eiffel2.jpg',
-            		opts : {
-            			caption : 'Second caption'
-            		}
-            	},
-                {
-            		src  : 'images/eiffel3.jpg',
-            		opts : {
-            			caption : 'Next caption'
-            		}
-            	},
-                {
-            		src  : 'images/eiffel4.jpg',
-            		opts : {
-            			caption : 'Other caption'
-            		}
-            	},
-                {
-                	src  : 'https://www.google.ru/maps/@48.8581206,2.2945218,16z',
-            		opts : {
-            			caption : 'Google Map'
-            		}
-            	}
-            ];
-        }
-        else if ( auctionId == 2 )
-        {
-            images = 
-            [
-                {
-                    src  : 'images/monumentvalley1.jpg',
-            		opts : {
-            			caption : 'First caption'
-            		}
-            	},
-            	{
-            		src  : 'images/monumentvalley2.jpg',
-            		opts : {
-            			caption : 'Second caption'
-            		}
-            	},
-                {
-            		src  : 'images/monumentvalley3.jpg',
-            		opts : {
-            			caption : 'Next caption'
-            		}
-            	},
-                {
-            		src  : 'images/monumentvalley4.jpg',
-            		opts : {
-            			caption : 'Other caption'
-            		}
-            	}
-            ];
-        }
-        else if ( auctionId == 3 )
-        {
-            images = 
-            [
-                {
-                    src  : 'images/mountfuji1.jpg',
-                	opts : {
-            			caption : 'First caption'
-            		}
-            	},
-            	{
-            		src  : 'images/mountfuji2.jpg',
-            		opts : {
-            			caption : 'Second caption'
-            		}
-            	},
-                {
-            		src  : 'images/mountfuji3.jpg',
-            		opts : {
-            			caption : 'Next caption'
-            		}
-            	},
-                {
-            		src  : 'images/mountfuji4.jpg',
-            		opts : {
-            			caption : 'Other caption'
-            		}
-            	}
-            ];
-        }
-        else if ( auctionId == 4 )
-        {
-            images = 
-            [
-                {
-                    src  : 'images/tokyotower1.jpg',
-                	opts : {
-            			caption : 'First caption'
-            		}
-            	},
-            	{
-            		src  : 'images/tokyotower2.jpg',
-            		opts : {
-            			caption : 'Second caption'
-            		}
-            	},
-                {
-            		src  : 'images/tokyotower3.jpg',
-            		opts : {
-            			caption : 'Next caption'
-            		}
-            	},
-                {
-            		src  : 'images/tokyotower4.jpg',
-            		opts : {
-            			caption : 'Other caption'
-            		}
-            	}
-            ];
-        }
-        
-        $.fancybox.open(images, options);
-        
-        /*$.fancybox.open(
-        [
-            {
-        		src  : 'images/eiffel1.jpg',
-        		opts : {
-        			caption : 'First caption'
-        		}
-        	},
-        	{
-        		src  : 'images/eiffel2.jpg',
-        		opts : {
-        			caption : 'Second caption'
-        		}
-        	},
-            {
-        		src  : 'images/eiffel3.jpg',
-        		opts : {
-        			caption : 'Next caption'
-        		}
-        	},
-            {
-        		src  : 'images/eiffel4.jpg',
-        		opts : {
-        			caption : 'Other caption'
-        		}
-        	}
-        ],
-        {
-        	loop : true,
-            thumbs : {
-            showOnStart   : true, // Display thumbnails on opening
-            hideOnClosing : true   // Hide thumbnail grid when closing animation starts
-            }                
-        }
-        );*/
-        
-        fullScreenFancyBox = true;
-    }
-    
-    //событие открытия FancyBox, чтобы обрабатывать кнопку Back на устройстве для закрытия галереи
-    $(document).on('onInit.fb', function( e, instance, slide ) {
-        fullScreenFancyBox = true;
+/*
+    //На мобильных устройствах при нажатии на картинку в галерее Fotorama не приходит событие ontap, потому что прерывается обработчиками галереи (а на десктопах onclick приходит).
+    //Поэтому пришлось открытие полноэкранного режима повесить на событие ontouchend. Но теперь, если мы уже в полноэкранном режиме и кликнули на иконку выхода из него, у нас сначала фоторама выходит из полноэкранного режима, а потом приходит наше событие ontouchend и мы опять включаем полный экран.
+    //чтобы этого избежать, вводим задержку включения полноэкранного режима после выхода из него.
+    var duringFotoramaFullScreenExit = false;
+    $('.fotorama').on('fotorama:fullscreenenter fotorama:fullscreenexit', function (e, fotorama) {
+         console.log("event onFotoramaFullScreenExit");
+        duringFotoramaFullScreenExit = true;
+        setTimeout(function() { console.log("timeout fullscreenexit");duringFotoramaFullScreenExit = false; }, 1000);
+        //убираем элементы управления с маленькой картинки
+            fotorama.setOptions({
+                allowfullscreen : false,
+                arrows : false,
+                nav : false,
+                keyboard : false,
+                trackpad : false,
+            });
     });
-    
-    //событие закрытия FancyBox, чтобы не обрабатывать для галереи кнопку Back на устройстве
-    $(document).on('afterClose.fb', function( e, instance, slide ) {
-        fullScreenFancyBox = false;
-    });
+    $('.fotorama').fotorama();
+*/
 
-
-    function showBidPanel( button, showPanel )
+    function switchPreviewFullScreen(divFotorama)
     {
-        var card = $(button).parents(".card");
-        if ( !card )
-            return;
         
-        var colMakeBid = $(card).find(".colMakeBid");
-        var colSpace = $(card).find(".colSpace");
-        var colWinNow = $(card).find(".colWinNow");
-        var bidPanel = $(card).find(".bidPanel");
-        
-        if( showPanel )
+/*$('.fotorama')
+    .on('fotorama:fullscreenenter fotorama:fullscreenexit', function (e, fotorama) {
+        console.log("event onFotoramaFullScreenExit_2_");
+    if (e.type === 'fotorama:fullscreenenter') {
+        // Options for the fullscreen
+        fotorama.setOptions({
+            fit: 'cover'
+        });
+    } else {
+        // Back to normal settings
+        fotorama.setOptions({
+            fit: 'contain'
+        });
+    }
+    })
+    .fotorama();*/
+    
+        //debugger;
+        //console.log("switchPreviewFullScreen(this)");
+        var fotorama = $(divFotorama).fotorama().data('fotorama');
+        console.log("fotorama.fullScreen="+fotorama.fullScreen);
+        console.log("duringFotoramaFullScreenExit="+duringFotoramaFullScreenExit);
+        if( !fotorama.fullScreen && !duringFotoramaFullScreenExit )
         {
-            //document.getElementById('colMakeBid').style.maxWidth='47%';document.getElementById('colMakeBid').style.flexBasis='47%';document.getElementById('colSpace').style.maxWidth='6%';document.getElementById('colSpace').style.flexBasis='6%';document.getElementById('colWinNow').style.maxWidth='47%';document.getElementById('colWinNow').style.flexBasis='47%';document.getElementById('bidPanel').style.maxHeight=document.getElementById('bidPanel').scrollHeight+'px';document.getElementById('bidPanel').style.top='0px';
-            $(colMakeBid).css({"maxWidth":"47%","flexBasis":"47%"});
-            $(colSpace).css({"maxWidth":"6%","flexBasis":"6%"})
-            $(colWinNow).css({"maxWidth":"47%","flexBasis":"47%"});
-            var h = bidPanel.prop("scrollHeight")+"px";
-            $(bidPanel).css({"maxHeight":h,"top":"0px"});
-        }
-        else
-        {
-            //document.getElementById('colMakeBid').style.maxWidth='100%';document.getElementById('colMakeBid').style.flexBasis='100%';document.getElementById('colSpace').style.maxWidth='0%';document.getElementById('colSpace').style.flexBasis='0%';document.getElementById('colWinNow').style.maxWidth='0%';document.getElementById('colWinNow').style.flexBasis='0%';document.getElementById('bidPanel').style.maxHeight='0px';document.getElementById('bidPanel').style.top='-60px'
-            $(colMakeBid).css({"maxWidth":"100%","flexBasis":"100%"});
-            $(colSpace).css({"maxWidth":"0%","flexBasis":"0%"})
-            $(colWinNow).css({"maxWidth":"0%","flexBasis":"0%"});
-            $(bidPanel).css({"maxHeight":"0px","top":"-60px"});
+            /*fotorama.options.allowfullscreen = true;
+            fotorama.requestFullScreen();
+            fotorama.options.arrows = true;
+            fotorama.options.nav = true;
+            fotorama.options.keyboard = true;*/
+            console.log("enter fullscreen")
+            
+            fotorama.setOptions({
+                allowfullscreen : true
+            });
+            fotorama.requestFullScreen();
+            fotorama.setOptions({
+                arrows : true,
+                nav : "thumbs",
+                keyboard : true,
+                trackpad : true,
+                navposition : "bottom"
+            });
+            fullScreenFotorama = fotorama;
+            //new RTP.PinchZoom($(divFotorama), {});
+            //new RTP.PinchZoom($('.fotorama__pointer'), {});
+            //new RTP.PinchZoom($('.fotorama__stage'), {});
+            new RTP.PinchZoom($('.fotorama__img'), {});
         }
     }
-
+    
   </script>
 </head>
 <body>

@@ -1,20 +1,13 @@
-  <script>
-     function pushSearch()
-     {
-         document.getElementById('navigator').pushPage('Search.html');
-     }
- </script>
-  
   <ons-page id="HomeBids">
       <div class="content" style="text-align: center">
-        <ons-if orientation="portrait"><p>&nbspVERTICAL ORIENTATION</p></ons-if>
+        <ons-if orientation="portrait"><p>&nbsp</p></ons-if>
         <p>Currently you don't participate in no one auctions.</p>
-        <p>Please don't lost your time!<ons-if orientation="portrait">BREAK<br /></ons-if>&nbspFind and win auction right now.</p>
+        <p>Please don't lost your time!<ons-if orientation="portrait"><br /></ons-if>&nbspFind and win auction right now.</p>
         <p>Be the first. Get more!</p>
-        <ons-if orientation="portrait"><p>&nbspVERTICAL ORIENTATION</p></ons-if>
+        <ons-if orientation="portrait"><p>&nbsp</p></ons-if>
         <!--<ons-button id="push-button" class="buttonCTA animated pulse animatedBtn" onclick="alert('isPortrait = '+ ons.orientation.isPortrait());document.getElementById('navigator').pushPage('Search.html')">-->
         <!--<ons-button id="push-button" class="buttonCTA animated pulse animatedBtn" onclick="document.getElementById('navigator').pushPage('Search.html')">-->
-        <ons-button id="push-button" class="buttonCTA animated pulse animatedBtn" onclick="pushSearch();">
+        <ons-button id="push-button" class="buttonCTA animated infinite pulse" onclick="document.getElementById('navigator').pushPage('Search.html');">
             <ons-icon icon="fa-search"></ons-icon> Find and win!
         </ons-button>
       </div>

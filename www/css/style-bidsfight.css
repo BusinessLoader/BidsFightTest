@@ -1,6 +1,14 @@
 /**/
 /*@import url("style-base.css");*/
 
+a {
+    color: #00e;
+}
+
+a:visited {
+    color: #00e !important;
+}
+
 hr {
    border-top: 1px solid #aaaaaa;
    border-bottom: 1px solid #d11;
@@ -9,11 +17,36 @@ hr {
 }
 
 .current-bid {
-    font-weight: 800;
+    /*font-weight: 800;
+    display: inline-block;*/
     color: #070;
 }
 
-.time-left {
-    font-weight: 800;
+
+.time-left{
+    /*font-weight: 800;
+    display: inline-block;*/
+    color: #333;
+}
+
+.time-left-warning {
+    /*font-weight: 800;
+    display: inline-block;*/
+    color: #ffa500;
+}
+
+.time-left-hot {
+    /*font-weight: 800;
+    display: inline-block;*/
     color: #c00;
+    /*text-shadow: 2px 4px 10px #c00;*/
+}
+
+
+.card {
+    /*margin-right: 10px;    
+    margin-left: 10px;    
+    padding: 10px;*/
+    border: 1px solid #ccc;
+    box-shadow: 2px 4px 10px 4px #ccc;
 }

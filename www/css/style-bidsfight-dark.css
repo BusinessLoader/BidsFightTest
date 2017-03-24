@@ -1,6 +1,14 @@
 /**/
 /*@import url("style-base.css");*/
 
+a {
+    color: #bbf;
+}
+
+a:visited {
+    color: #bbf !important;
+}
+
 hr {
    border-top: 1px solid #aaaaaa;
    border-bottom: 1px solid #a11;
@@ -9,15 +17,34 @@ hr {
 }
 
 .current-bid {
-    font-weight: 800;
+    /*font-weight: 800;
+    display: inline-block;*/
     color: #4c4;
 }
 
-.time-left {
-    font-weight: 800;
-    color: #c44;
+.time-left{
+    /*font-weight: 800;
+    display: inline-block;*/
+    color: #ccc;
 }
 
-.theme {
-    color: #bbf;
+.time-left-warning {
+    /*font-weight: 800;
+    display: inline-block;*/
+    color: #ffa500;
+}
+
+.time-left-hot {
+    /*font-weight: 800;
+    display: inline-block;*/
+    color: #c44;
+    /*text-shadow: 2px 4px 10px #c00;*/
+}
+
+.card {
+    /*margin-right: 10px;    
+    margin-left: 10px;    
+    padding: 10px;*/
+    border: 1px solid gray;
+    /*box-shadow: 2px 4px 10px 4px gray;*/
 }
