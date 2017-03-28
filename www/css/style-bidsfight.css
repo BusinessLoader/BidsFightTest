@@ -1,13 +1,16 @@
 /**/
 /*@import url("style-base.css");*/
 
-a {
-    color: #00e;
-}
-
-a:visited {
+/* Задаем цвет ссылок, потому что после клика на них (в телефоне и адресе) они меняют свой цвет плохо видны, особенно в темной теме */
+a, a:visited {
     color: #00e !important;
 }
+
+/* Для Leaflet переопределяем цвета ссылок, т.к. он использует их для кнопок */
+a.leaflet-control-zoom-in, a.leaflet-control-zoom-out, a:visited.leaflet-control-zoom-in, a:visited.leaflet-control-zoom-out {
+    color: #d11 !important;
+}
+
 
 hr {
    border-top: 1px solid #aaaaaa;

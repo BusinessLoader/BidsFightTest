@@ -1,9 +1,21 @@
   <ons-page id="SearchAdvanced">
-      <div class="content" style="text-align: center">
+      <div class="content" style="text-align: center" onsubmit="searchAdvanced()">
         <p>Please type auction's ID, part of title or description and press 'Find!':</p>
         <p><input type="search" class="search-input" style="width: 75%; margin: 6px auto 6px auto;" placeholder="Search" autofocus="true"></input></p>
         <!--<p><ons-input type="search"  style="width: 75%; margin: 6px auto 6px auto;" placeholder="Search" autofocus="true"></ons-input></p>-->
-        <ons-button id="push-button" onclick="">
+        <p>
+            <ons-input type="checkbox" input-id="searchNearMe" onchange="clickNearMe(this)"></ons-input>
+            <label for="searchNearMe" >Near me</label>
+            <div class="search-map-container" style="display:none">
+                Maximum distance (in meters): <input id="search-distance" style="font-size: 17px;text-align:center;width:15%" type="text" placeholder="1000" value="1000" onsubmit="searchAdvanced()"></input>
+                <br />
+                <br />
+                <div id="search-map" style="margin-left:5%; margin-right:5%; min-height:200px">
+                    <div id="radar"></div>
+                </div>
+            </div>
+        </p>
+        <ons-button id="search-advanced-button" type="submit" onclick="searchAdvanced()">
             <ons-icon icon="fa-search"></ons-icon>
             Find
         </ons-button>
