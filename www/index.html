@@ -278,7 +278,9 @@
 
     function showAuctionInfo()
     {
-        if ( !event.target.matches('.ons-icon') && !(event.target.tagName == "A") )
+        debugger;
+        //if ( !event.target.matches('.ons-icon') && !(event.target.tagName == "A") )
+        if ( !event.target.matches('.ons-icon') && !event.target.parentElement.classList.contains('phone') && !event.target.parentElement.classList.contains('location') )
         {
             //alert("Auction info");
             fn.load('Auction.html');
@@ -887,7 +889,8 @@
             prefix:"fa"
             });
             
-            markerResult = L.marker(bounds.getSouthEast(), {icon: markerResult});            
+            markerResult = L.marker(bounds.getSouthEast(), {icon: markerResult});
+            markerResult.bindPopup('<b>Short auction description...</b><br>Time to left...<br>Current bid...<br><a href="#" onclick="showAuctionInfo()">More info...</a>');
             layerMarkers.addLayer(markerResult);            
         }
         else if ( i == 2 )
@@ -901,6 +904,7 @@
             });
             
             markerResult = L.marker(bounds.getSouthWest(), {icon: markerResult});            
+            markerResult.bindPopup('<b>Short auction description...</b><br>Time to left...<br>Current bid...<br><a href="#" onclick="showAuctionInfo()">More info...</a>');
             layerMarkers.addLayer(markerResult);            
         }
         else if ( i == 3 )
@@ -914,6 +918,7 @@
             });
             
             markerResult = L.marker(bounds.getNorthEast(), {icon: markerResult});            
+            markerResult.bindPopup('<b>Short auction description...</b><br>Time to left...<br>Current bid...<br><a href="#" onclick="showAuctionInfo()">More info...</a>');
             layerMarkers.addLayer(markerResult);            
         }
         else if ( i == 4 )
@@ -927,6 +932,7 @@
             });
             
             markerResult = L.marker(bounds.getNorthWest(), {icon: markerResult});            
+            markerResult.bindPopup('<b>Short auction description...</b><br>Time to left...<br>Current bid...<br><a href="#" onclick="showAuctionInfo()">More info...</a>');
             layerMarkers.addLayer(markerResult);            
         }
     }

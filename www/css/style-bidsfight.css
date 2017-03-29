@@ -7,7 +7,13 @@ a, a:visited {
 }
 
 /* Для Leaflet переопределяем цвета ссылок, т.к. он использует их для кнопок */
-a.leaflet-control-zoom-in, a.leaflet-control-zoom-out, a:visited.leaflet-control-zoom-in, a:visited.leaflet-control-zoom-out {
+a.leaflet-control-zoom-in,
+a:visited.leaflet-control-zoom-in,
+a.leaflet-control-zoom-out,
+a:visited.leaflet-control-zoom-out,
+a.leaflet-popup-close-button,
+a:visited.leaflet-popup-close-button
+{
     color: #d11 !important;
 }
 
