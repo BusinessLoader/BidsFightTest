@@ -54,21 +54,7 @@
                         }
                     });
             });
-            var myNavigator = document.getElementById('navigator');
-            myNavigator.onDeviceBackButton = function(event) {
-                console.log('Hardware back button!');
-                if ( !fullScreenFancyBox )
-                {
-                    event.callParentHandler(); // Calls the parent handler (navigator handler in this case)
-                }
-                else
-                {
-                    $.fancybox.close( true );
-                    fullScreenFancyBox = false;
-                }
-            };            
         }
-        
     }
 
     document.addEventListener('preshow', onPreshowAlertDialog);        
@@ -278,7 +264,6 @@
 
     function showAuctionInfo()
     {
-        debugger;
         //if ( !event.target.matches('.ons-icon') && !(event.target.tagName == "A") )
         if ( !event.target.matches('.ons-icon') && !event.target.parentElement.classList.contains('phone') && !event.target.parentElement.classList.contains('location') )
         {
@@ -319,19 +304,82 @@
         
       var page = event.target;
 
-      if (page.matches('#Search')) {
+        /*debugger;
+        page.onDeviceBackButton = function(e) {
+            //console.log('Hardware back button!');
+            if ( !fullScreenFancyBox )
+            {
+                e.callParentHandler(); // Calls the parent handler (navigator handler in this case)
+            }
+            else
+            {
+                $.fancybox.close( true );
+                fullScreenFancyBox = false;
+            }
+        };*/            
+
+      if (page.matches('#Search'))
+      {
         //if ( page.data.activeTab != undefined )
         //{
             //document.getElementById('SearchTabbar').setActiveTab(page.data.activeTab);
             var index = page.data.activeTab ? page.data.activeTab : 0;
             document.getElementById('SearchTabbar').setActiveTab(index);
         //}
+        page.onDeviceBackButton = function(event) {
+            //console.log('Hardware back button!');
+            if ( !fullScreenFancyBox )
+            {
+                event.callParentHandler(); // Calls the parent handler (navigator handler in this case)
+            }
+            else
+            {
+                $.fancybox.close( true );
+                fullScreenFancyBox = false;
+            }
+        };            
 
-      } else if (page.matches('#SettingsNotifications')) {
+      }
+      else if (page.matches('#Home'))
+      {
+        page.onDeviceBackButton = function(event) {
+            //console.log('Hardware back button!');
+            if ( !fullScreenFancyBox )
+            {
+                event.callParentHandler(); // Calls the parent handler (navigator handler in this case)
+            }
+            else
+            {
+                $.fancybox.close( true );
+                fullScreenFancyBox = false;
+            }
+        };            
+      
+      }
+      else if (page.matches('#Auction'))
+      {
+        page.onDeviceBackButton = function(event) {
+            //console.log('Hardware back button!');
+            if ( !fullScreenFancyBox )
+            {
+                event.callParentHandler(); // Calls the parent handler (navigator handler in this case)
+            }
+            else
+            {
+                $.fancybox.close( true );
+                fullScreenFancyBox = false;
+            }
+        };            
+      
+      }
+      else if (page.matches('#SettingsNotifications'))
+      {
             document.getElementById('showConnectionAlert').checked = showConnectionAlert;
             //alert("init settings showConnectionAlert="+showConnectionAlert+" checked="+document.getElementById('showConnectionAlert').checked);
       
-      } else if (page.matches('#SettingsAppearance')) {
+      }
+      else if (page.matches('#SettingsAppearance'))
+      {
             document.getElementById(themeName).checked = true;
             //alert("init settings showConnectionAlert="+showConnectionAlert+" checked="+document.getElementById('showConnectionAlert').checked);
       }
