@@ -1,12 +1,12 @@
     <ons-page id="History">
         <ons-toolbar>
-            <div class="left"><ons-back-button>Back</ons-back-button></div>
+            <div class="left"><ons-back-button id="historyBack" data-intro="Back">Back</ons-back-button></div>
             <div class="center">
                 History
             </div>
             <div class="right">
-                <ons-toolbar-button onclick="FilterHistory()"><ons-icon icon="fa-filter"></ons-icon></ons-toolbar-button>
-                <ons-toolbar-button onclick="ClearHistory()"><ons-icon icon="fa-eraser"></ons-icon></ons-toolbar-button>
+                <ons-toolbar-button id="historyFilter" onclick="FilterHistory()" data-intro="Filter"><ons-icon icon="fa-filter"></ons-icon></ons-toolbar-button>
+                <ons-toolbar-button onclick="ClearHistory()" data-intro="Clear"><ons-icon icon="fa-eraser"></ons-icon></ons-toolbar-button>
                 <!--<ons-toolbar-button><div class="notification events-notification">12</div><ons-icon icon="fa-bell"></ons-icon></ons-toolbar-button>-->
                 <ons-toolbar-button onclick="showPopover('menuMore',this)"><ons-icon icon="fa-ellipsis-v"></ons-icon></ons-toolbar-button>
             </div>
@@ -18,7 +18,7 @@
           </div>-->
           <div class="navigation-bar--material__center"  style="vertical-align: middle;">
     
-            <input type="search" class="search-input" style="width: 100%; margin: 6px auto 6px auto;display: inline-block;vertical-align: middle;" placeholder="Search">
+            <input id="historySearch" type="search" class="search-input" style="width: 100%; margin: 6px auto 6px auto;display: inline-block;vertical-align: middle;" placeholder="Search">
             <!--<ons-toolbar-button style="vertical-align: middle;"><ons-icon icon="fa-bell"></ons-icon></ons-toolbar-button>-->
 
           </div>
@@ -35,7 +35,7 @@
                   <img src="images/location1.png" class="thumbnail">
                 </ons-col>
                 <ons-col >
-                  <div class="auction-title">
+                  <div id="auctionTitle" class="auction-title">
                     Eiffel Tower
                   </div>
                   <p></p>

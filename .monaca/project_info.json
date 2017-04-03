@@ -40,10 +40,15 @@
         "phonegap-plugin-barcodescanner@6.0.5"
     ],
     "title-ja": "",
-    "title-en": "BidsFightTest",
+    "title-en": "BF_30_03",
     "description-ja": "",
     "description-en": "",
     "category": "User Template",
-    "platform": [],
-    "name": "generated-1485024132-584a8c1b803451dc40bfe8cf"
+    "platform": [
+        "android",
+        "ios",
+        "winrt",
+        "chrome"
+    ],
+    "name": "generated-1490889009-584a8c1b803451dc40bfe8cf"
 }

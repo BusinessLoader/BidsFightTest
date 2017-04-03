@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta http-equiv="Content-Security-Policy" content="default-src * data:; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
   
-  <script src="components/loader.js"></script>
-  <script src="lib/onsenui/js/onsenui.min.js"></script>
-  <link rel="stylesheet" href="components/loader.css">
-  <link rel="stylesheet" href="lib/onsenui/css/onsenui.css">
+    <script src="components/loader.js"></script>
+    <script src="lib/onsenui/js/onsenui.min.js"></script>
+    <link rel="stylesheet" href="components/loader.css">
+    <link rel="stylesheet" href="lib/onsenui/css/onsenui.css">
   
-  <script src="lib/jquery/jquery-3.1.1.min.js"></script>
+    <script src="lib/jquery/jquery-3.1.1.min.js"></script>
   
     <link  href="lib/fancybox/jquery.fancybox.min.css" rel="stylesheet">
     <!--<script src="lib/fancybox/jquery.fancybox.min.js"></script>-->
@@ -23,20 +23,29 @@
     <link  href="lib/leaflet-awesome-markers/leaflet.awesome-markers.css" rel="stylesheet">
     <script src="lib/leaflet-awesome-markers/leaflet.awesome-markers.min.js"></script>
 
+    <!--<link  href="lib/intro/introjs.min.css" rel="stylesheet">-->
+    <!--<script src="lib/intro/intro.min.js"></script>-->
 
-  <link id="themeComponents" rel="stylesheet" href="lib/onsenui/css/theme-bidsfight.css">
-  <link rel="stylesheet" href="css/style-base.css">
-  <link id="themeStyle" rel="stylesheet" href="css/style-bidsfight.css">
-  
-  <!--Animate.css содержит много анимаций и много весит. Только нужное вырезано и вставлено в файл animate-bidsfight.css-->
-  <!--<link rel="stylesheet" href="css/animate.css">-->
-  <link rel="stylesheet" href="css/animate-bidsfight.css">
+    <!--<link  href="lib/bootstrap-tour/bootstrap-tour-standalone.min.css" rel="stylesheet">-->
+    <!--<script src="lib/bootstrap-tour/bootstrap-tour-standalone.min.js"></script>-->
+    
+    <!--<link rel="stylesheet" type="text/css" href="//oss.maxcdn.com/jquery.trip.js/3.3.3/trip.min.css"/>-->
+    <!--<script src="//oss.maxcdn.com/jquery.trip.js/3.3.3/trip.min.js"></script>-->
+
+
+    <link id="themeComponents" rel="stylesheet" href="lib/onsenui/css/theme-bidsfight.css">
+    <link rel="stylesheet" href="css/style-base.css">
+    <link id="themeStyle" rel="stylesheet" href="css/style-bidsfight.css">
+    
+    <!--Animate.css содержит много анимаций и много весит. Только нужное вырезано и вставлено в файл animate-bidsfight.css-->
+    <!--<link rel="stylesheet" href="css/animate.css">-->
+    <link rel="stylesheet" href="css/animate-bidsfight.css">
 
 
   <script>
   
   var fullScreenFancyBox = false;
-    ons.ready(onOnsReady);
+    ons.ready(onOnsReady); 
     function onOnsReady()
     {
         //alert('onOnsReady');
@@ -273,20 +282,59 @@
     }
     
     // Page show event
-    document.addEventListener('show', function(event) {
+    document.addEventListener('show', function(event)
+    {
         var page = event.target;
-          //alert("show\r\n"+page); 
             
-        /*if (page.matches('#HomeWatch'))
+        if (page.matches('#History'))
         {
-            $("[data-fancybox]").fancybox({
-            	// Options will go here
-                thumbs : {
-                showOnStart   : true, // Display thumbnails on opening
-            	hideOnClosing : true   // Hide thumbnail grid when closing animation starts
-                }                
+            /*var intro = introJs();
+            intro.setOptions({
+                hidePrev : true,
+                hideNext : true,
+                showStepNumbers : false,
+                showBullets : true,
+                scrollToElement : true,
+                tooltipPosition : 'bottom',
             });
-        }*/
+            intro.start();*/
+            
+            // Instance the tour
+            /*var tour = new Tour({
+                //backdrop : true,
+                //container : false,
+              steps: [
+              {
+                element: "#buttonBack",
+                title: "Back",
+                content: "Back to previous page",
+                placement: "auto",
+                smartPlacement: false,
+              },
+              {
+                element: "#buttonFilter",
+                title: "Filter",
+                content: "Filter history list",
+                placement: "top",
+                smartPlacement: false,
+              }
+            ]});
+            // Initialize the tour
+            tour.init();
+            // Start the tour
+            tour.start();*/
+            
+            /*var tripToHighlight = new Trip([
+              { sel : $("#buttonBack"), content : "Button Back", expose : false, position: 's' }
+            ], {
+              delay : -1
+            });
+            tripToHighlight.start();*/
+           
+            //самодеятельность по onboarding-туру
+            startTour();
+            
+        }
         
         
     });
@@ -298,90 +346,48 @@
         //alert("prepush\r\n"+page); 
     });
 
-    
+
     // Page init event
     document.addEventListener('init', function(event) {
         
-      var page = event.target;
+        var page = event.target;
 
-        /*debugger;
-        page.onDeviceBackButton = function(e) {
-            //console.log('Hardware back button!');
-            if ( !fullScreenFancyBox )
+        //для обработки нажатия кнопки Back на телефоне, нужно навесить хендлер, чтобы при необходимости закрывать не страницу, а открытую галерею или тур по продукту и т.д.
+        //но хендлер нельзя навешивать на боковое выезжающее меню, иначе будут проблемы
+        if (!page.matches('#menuMainSlide'))
+        {
+            page.onDeviceBackButton = function(event)
             {
-                e.callParentHandler(); // Calls the parent handler (navigator handler in this case)
-            }
-            else
-            {
-                $.fancybox.close( true );
-                fullScreenFancyBox = false;
-            }
-        };*/            
+                if ( fullScreenFancyBox )
+                {
+                    $.fancybox.close( true );
+                    fullScreenFancyBox = false;
+                }
+                else if ( currentTourElem )
+                {
+                    tourStop();
+                }
+                else
+                {
+                    event.callParentHandler(); // Calls the parent handler (navigator handler in this case)
+                }
+            };            
 
+        }
+      
       if (page.matches('#Search'))
       {
-        //if ( page.data.activeTab != undefined )
-        //{
-            //document.getElementById('SearchTabbar').setActiveTab(page.data.activeTab);
-            var index = page.data.activeTab ? page.data.activeTab : 0;
-            document.getElementById('SearchTabbar').setActiveTab(index);
-        //}
-        page.onDeviceBackButton = function(event) {
-            //console.log('Hardware back button!');
-            if ( !fullScreenFancyBox )
-            {
-                event.callParentHandler(); // Calls the parent handler (navigator handler in this case)
-            }
-            else
-            {
-                $.fancybox.close( true );
-                fullScreenFancyBox = false;
-            }
-        };            
-
-      }
-      else if (page.matches('#Home'))
-      {
-        page.onDeviceBackButton = function(event) {
-            //console.log('Hardware back button!');
-            if ( !fullScreenFancyBox )
-            {
-                event.callParentHandler(); // Calls the parent handler (navigator handler in this case)
-            }
-            else
-            {
-                $.fancybox.close( true );
-                fullScreenFancyBox = false;
-            }
-        };            
-      
-      }
-      else if (page.matches('#Auction'))
-      {
-        page.onDeviceBackButton = function(event) {
-            //console.log('Hardware back button!');
-            if ( !fullScreenFancyBox )
-            {
-                event.callParentHandler(); // Calls the parent handler (navigator handler in this case)
-            }
-            else
-            {
-                $.fancybox.close( true );
-                fullScreenFancyBox = false;
-            }
-        };            
-      
+        var index = page.data.activeTab ? page.data.activeTab : 0;
+        document.getElementById('SearchTabbar').setActiveTab(index);
       }
       else if (page.matches('#SettingsNotifications'))
       {
             document.getElementById('showConnectionAlert').checked = showConnectionAlert;
-            //alert("init settings showConnectionAlert="+showConnectionAlert+" checked="+document.getElementById('showConnectionAlert').checked);
       
       }
       else if (page.matches('#SettingsAppearance'))
       {
             document.getElementById(themeName).checked = true;
-            //alert("init settings showConnectionAlert="+showConnectionAlert+" checked="+document.getElementById('showConnectionAlert').checked);
       }
     });
     
@@ -534,10 +540,11 @@
 
 
     
-    function showFancyBox(auctionId)
+    function showFancyBox(auctionId, animationElem)
     {
         var options = 
         {
+            speed : 0,//выключаем постепенное появление на экране и исчезание (мешает в комбинации с анимацией разворачивания элемента)
             loop : true,
             closeClickOutside : false,
             thumbs : {
@@ -680,7 +687,20 @@
             ];
         }
         
-        $.fancybox.open(images, options);
+        if ( animationElem )
+        {
+            var rect = animationElem.getBoundingClientRect();
+            $(".fancyboxAnimator").css({"opacity":"0.2", "top":rect.top, "bottom":document.documentElement.clientHeight-rect.bottom, "left":rect.left, "right":document.documentElement.clientWidth-rect.right});
+            $(".fancyboxAnimator").css({"display":"block"});
+            
+            //$(".fancyboxAnimator").animate({"opacity":"0.87", "top":"0", "bottom":"0", "left":"0", "right":"0"}, {duration:"500", easing:"linear", queue:false, complete:function(){$('.fancyboxAnimator').css({'display':'none'});}} );
+            //setTimeout(function(){$.fancybox.open(images, options);}, 400);
+            $(".fancyboxAnimator").animate({opacity:"0.87", top:"0", bottom:"0", left:"0", right:"0"}, {duration:300, easing:"linear", queue:false, complete:function(){$.fancybox.open(images, options); setTimeout(function(){$('.fancyboxAnimator').css({'display':'none'})}, 100)  }} );
+        }
+        else
+        {
+            $.fancybox.open(images, options);
+        }
         
         /*$.fancybox.open(
         [
@@ -996,7 +1016,92 @@
   </ons-splitter-content>
 </ons-splitter>
 
+<!-- div для анимации разворачивания галереии FancyBox из картинки -->
+<div class="fancyboxAnimator" style="position:fixed; display:none; background-color:black; opacity:0.4" ></div>
 
+
+<!-- BEGIN блок самодеятельности для onboarding-тура по продукту, поскольку типовые библиотеки работают криво с OnsenUI -->
+<div class="tourOverlay tourOverlayLeft" style="position:fixed; display:none; background-color:rgba(0,0,0,0.6)" ></div>
+<div class="tourOverlay tourOverlayTop" style="position:fixed; display:none; background-color:rgba(0,0,0,0.6)" ></div>
+<div class="tourOverlay tourOverlayRight" style="position:fixed; display:none; background-color:rgba(0,0,0,0.6)" ></div>
+<div class="tourOverlay tourOverlayBottom" style="position:fixed; display:none; background-color:rgba(0,0,0,0.6)" ></div>
+
+<ons-template id="popoverTour.html">
+    <ons-popover direction="down" id="popoverTour" disable-auto-styling>
+      <div style="padding: 10px; text-align: center;">
+        <p id="tourCaption" style="font-weight:800">
+          Caption
+        </p>
+        <p id="tourContent">
+          Content
+        </p>
+        <p>
+          <ons-button id="buttonTourNext" onclick="">Got it</ons-button>
+        </p>
+      </div>
+    </ons-popover>
+</ons-template>
+
+
+<script>
+    //фишка, предложенная Fran-Diox для лечения проблемы, при которой создание поповера без отображения на экране приводит к проблемам с кнопкой Back на телефоне
+    function popoverBackHandler(e)
+    {
+        //к сожалению, фишка не работает, потому что в этом случае попап, не имеющий атрибута cancelable, вместо хендлеров страницы и навигатора сразу вызывает хендлер приложения, который должен закрыть приложение
+        //var popover = document.getElementById('popoverTour');
+        //popover.cancelable && popover.visible ? popover._cancel() : e.callParentHandler();
+        
+        //поэтому используем другую фишку собственного приготовления - при создании попапа делаем ему hide(), что почему-то сбрасывает хендлер
+        
+        //останавливаем показ, если он идёт
+        if ( currentTourElem )
+        {
+            tourStop();
+        }
+    }
+    
+    //при создании попапа делаем ему hide(), что почему-то сбрасывает хендлер
+    ons.createPopover('popoverTour.html').then(function(popover) {popover.onDeviceBackButton = popoverBackHandler; popover.hide();});
+
+    var currentTourElem;
+    
+    function startTour()
+    {
+        //document.getElementById("buttonTourNext").onclick = tourStop;
+        document.getElementById("buttonTourNext").onclick = function(){tourStop();showElementTour("historySearch", "Search", "You can use search in history list.");document.getElementById("buttonTourNext").onclick = function(){tourStop()}};
+        showElementTour("historyFilter", "Filter", "You can use several condition to filter history list.");
+    }
+    
+    function showElementTour(elemId, caption, content)
+    {
+        currentTourElem = document.getElementById(elemId);
+        var rect = currentTourElem.getBoundingClientRect();
+        $(".tourOverlayLeft").css({"top":"0", "bottom":"0", "left":"0", "right":document.documentElement.clientWidth-rect.left+"px"});
+        $(".tourOverlayTop").css({"top":"0", "bottom":document.documentElement.clientHeight-rect.top+"px", "left":rect.left+"px", "right":document.documentElement.clientWidth-rect.right+"px"});
+        $(".tourOverlayRight").css({"top":"0", "bottom":"0", "left":rect.right+"px", "right":"0"});
+        $(".tourOverlayBottom").css({"top":rect.bottom+"px", "bottom":"0", "left":rect.left+"px", "right":document.documentElement.clientWidth-rect.right+"px"});
+        $(".tourOverlay").css({"display":"block"});
+        $(currentTourElem).addClass("animated infinite pulse-with-shadow");
+        document.getElementById('tourCaption').innerHTML = caption;
+        document.getElementById('tourContent').innerHTML = content;
+        document.getElementById('popoverTour').show(currentTourElem);
+    
+    }
+    
+    function tourNext()
+    {
+        
+    }
+    
+    function tourStop()
+    {
+        document.getElementById('popoverTour').hide();
+        $('.tourOverlay').css({'display':'none'});
+        $(currentTourElem).removeClass('animated infinite pulse-with-shadow');
+        currentTourElem = null;
+    }
+</script>
+<!-- END блок самодеятельности для onboarding-тура по продукту -->
 
 </body>
 </html>
