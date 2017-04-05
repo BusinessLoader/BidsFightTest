@@ -3,6 +3,23 @@
         <p>Please type auction's ID, part of title or description and press 'Find!':</p>
         <p><input type="search" class="search-input" style="width: 75%; margin: 6px auto 6px auto;" placeholder="Search"></input></p>
         <!--<p><ons-input type="search" style="width: 75%; margin: 6px auto 6px auto;" placeholder="Search" autofocus="true"></ons-input></p>-->
+
+        <p>
+        
+        <label for="searchAuctionType">Please select auction type:</label><br />
+        <select name="searchAuctionType" id="searchAuctionType" placeholder="Аuction type" multiple style="width:75%">
+        </select>
+
+        <!--<label for="searchAuctionType">Please select auction type:</label><br />
+        <select id="searchAuctionType" name="searchAuctionType" multiple="multiple">
+          <option value="1" >Bar</option>
+          <option value="2" >Night club</option>
+          <option value="4" >Restaurant</option>
+          <option value="6" >Caffe</option>
+        </select>-->
+        
+        </p>
+
         <ons-button id="push-button" onclick="">
             <ons-icon icon="fa-search"></ons-icon>
             Find

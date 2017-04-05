@@ -31,7 +31,25 @@
     
     <!--<link rel="stylesheet" type="text/css" href="//oss.maxcdn.com/jquery.trip.js/3.3.3/trip.min.css"/>-->
     <!--<script src="//oss.maxcdn.com/jquery.trip.js/3.3.3/trip.min.js"></script>-->
+    
+    <link rel="stylesheet" type="text/css" href="lib/choices/choices.min.css"/>
+    <style>
+    .choices__list--multiple .choices__item {
+        background-color: #d11;
+        border: 1px solid #900;
+        font-size: 15px;
+    }
+    
+    .choices[data-type*=select-multiple] .choices__button, .choices[data-type*=text] .choices__button {
+        border-left: 1px solid #fff;
+    	opacity: 1;
+    }    
+    </style>
+    <script src="lib/choices/choices.min.js"></script>
 
+    <!--<link rel="stylesheet" type="text/css" href="lib/select2/select2.css"/>-->
+    <!--<link rel="stylesheet" type="text/css" href="lib/select2/select2.min.css"/>-->
+    <!--<script src="lib/select2/select2.full.min.js"></script>-->
 
     <link id="themeComponents" rel="stylesheet" href="lib/onsenui/css/theme-bidsfight.css">
     <link rel="stylesheet" href="css/style-base.css">
@@ -346,11 +364,14 @@
         //alert("prepush\r\n"+page); 
     });
 
+    var choicesAuctionType;
 
     // Page init event
     document.addEventListener('init', function(event) {
         
         var page = event.target;
+
+//console.log("init page.id = "+page.id);
 
         //для обработки нажатия кнопки Back на телефоне, нужно навесить хендлер, чтобы при необходимости закрывать не страницу, а открытую галерею или тур по продукту и т.д.
         //но хендлер нельзя навешивать на боковое выезжающее меню, иначе будут проблемы
@@ -377,8 +398,28 @@
       
       if (page.matches('#Search'))
       {
+        /* KSV нужно раскомментврить, чтобы открывалась сразу нужная закладка (было убрано для экспериментов с тегами Choices)
         var index = page.data.activeTab ? page.data.activeTab : 0;
-        document.getElementById('SearchTabbar').setActiveTab(index);
+        var tabbar = document.getElementById('SearchTabbar');
+        if( index != tabbar.tabIndex )
+            tabbar.setActiveTab(index);*/
+      }
+      
+      else if (page.matches('#SearchSimple'))
+      {
+          //debugger;
+            choicesAuctionType = new Choices(document.getElementById('searchAuctionType'),{removeItemButton: true,});
+            choicesAuctionType.setChoices(
+            [
+                {value: 'id1', label: 'Bar'},
+                {value: 'id2', label: 'Night club'},
+                {value: 'id3', label: 'Cafe'},
+                {value: 'id4', label: 'Restaurant'},
+            ],
+            'value', 'label', true);
+            /*$("#searchAuctionType").select2({
+              tags: true
+            });*/            
       }
       else if (page.matches('#SettingsNotifications'))
       {
@@ -389,6 +430,7 @@
       {
             document.getElementById(themeName).checked = true;
       }
+      
     });
     
     /*ons.createPopover('menuMore.html');
