@@ -6,7 +6,8 @@
   <meta http-equiv="Content-Security-Policy" content="default-src * data:; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
   
     <script src="components/loader.js"></script>
-    <script src="lib/onsenui/js/onsenui.min.js"></script>
+    <!--<script src="lib/onsenui/js/onsenui.min.js"></script>-->
+    <script src="lib/onsenui/js/onsenui.js"></script>
     <link rel="stylesheet" href="components/loader.css">
     <link rel="stylesheet" href="lib/onsenui/css/onsenui.css">
   
@@ -51,7 +52,7 @@
     <!--<link rel="stylesheet" type="text/css" href="lib/select2/select2.min.css"/>-->
     <!--<script src="lib/select2/select2.full.min.js"></script>-->
 
-    <link id="themeComponents" rel="stylesheet" href="lib/onsenui/css/theme-bidsfight.css">
+    <link id="themeComponents" rel="stylesheet" href="css/theme-bidsfight.css" >
     <link rel="stylesheet" href="css/style-base.css">
     <link id="themeStyle" rel="stylesheet" href="css/style-bidsfight.css">
     
@@ -187,12 +188,12 @@
         //подключение темы
         if ( themeName == "themeDark")
         {
-            document.getElementById("themeComponents").href = "lib/onsenui/css/theme-bidsfight-dark.css";
+            document.getElementById("themeComponents").href = "css/theme-bidsfight-dark.css";
             document.getElementById("themeStyle").href = "css/style-bidsfight-dark.css";
         }
         else
         {
-            document.getElementById("themeComponents").href = "lib/onsenui/css/theme-bidsfight.css";
+            document.getElementById("themeComponents").href = "css/theme-bidsfight.css";
             document.getElementById("themeStyle").href = "css/style-bidsfight.css";
         }
     }
@@ -398,11 +399,12 @@
       
       if (page.matches('#Search'))
       {
-        /* KSV нужно раскомментврить, чтобы открывалась сразу нужная закладка (было убрано для экспериментов с тегами Choices)
+        
+        //KSV нужно раскомментарить, чтобы открывалась сразу нужная закладка (было убрано для экспериментов с тегами Choices)
         var index = page.data.activeTab ? page.data.activeTab : 0;
         var tabbar = document.getElementById('SearchTabbar');
         if( index != tabbar.tabIndex )
-            tabbar.setActiveTab(index);*/
+            tabbar.setActiveTab(index);
       }
       
       else if (page.matches('#SearchSimple'))
